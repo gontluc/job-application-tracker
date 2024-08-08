@@ -1,0 +1,45 @@
+@mixin flexCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin avoidSelection {
+    /* Safari */
+    -webkit-user-select: none;
+    /* IE 10 and IE 11 */
+    -ms-user-select: none;
+    /* Standard syntax */
+    user-select: none;
+}
+
+@mixin sectionMargin {
+    margin: auto 10%;
+}
+
+@mixin padding {
+    padding: .3em .7em;  
+}
+
+@mixin letterSpacing {
+    letter-spacing: .05em; 
+}
+
+@mixin whiteBlueContainer {
+    color: $white;
+    background-color: $blue;
+    border-radius: $borderRadius;
+}
+
+@mixin ctaBtn {
+    @include padding;
+    
+    font-weight: 500;
+    font-size: 18px;
+    cursor: pointer; 
+
+    &:active {
+        transition: none;
+        transform: scale(.85);
+    }
+}

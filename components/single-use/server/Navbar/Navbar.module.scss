@@ -1,0 +1,26 @@
+@import "/styles/globals/config";
+
+.container {
+    @include avoidSelection;
+    @include sectionMargin;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 40px 0;
+}
+
+.logo {
+    @include whiteBlueContainer;
+    @include letterSpacing;
+    @include padding;       
+
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.ctas {
+    display: flex;
+    gap: 10px;
+}

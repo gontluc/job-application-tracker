@@ -1,0 +1,10 @@
+@import "/styles/globals/config";
+
+.container {
+    @include whiteBlueContainer;
+    @include ctaBtn;
+
+    &:hover {
+        background-color: $lightBlue;
+    }
+}

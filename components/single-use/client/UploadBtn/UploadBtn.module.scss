@@ -1,0 +1,49 @@
+@import "/styles/globals/config";
+
+.container {
+    @include ctaBtn;
+
+    color: $blue;
+
+    &:hover {
+        color: $lightBlue;
+        text-decoration: underline $lightBlue 2px;
+        text-underline-offset: 3px;
+    }
+}
+
+.uploadPopUp {
+    position: fixed;
+    z-index: 10;
+    inset: 0;
+    background-color: rgba(0, 0, 0, .25);
+}
+
+.label {
+    display: none;
+}
+
+.dropzone {
+    @include flexCenter;
+
+    width: 100%;
+    height: 100%;
+    color: $black;
+    cursor: pointer;
+}
+
+.dropzoneTextContainer {
+    @include flexCenter;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.uploadBtn {
+    @include padding;
+    @include flexCenter;
+    @include whiteBlueContainer;
+
+    &:hover {
+        background-color: $lightBlue;
+    }
+}

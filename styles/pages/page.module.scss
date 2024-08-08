@@ -1,0 +1,13 @@
+@import "/styles/globals/config";
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+}
+
+@media (max-width: 1000px) {
+    .container {
+        gap: 60px;
+    }
+}
