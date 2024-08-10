@@ -1,39 +1,15 @@
-/* "use client" */
-
 // Components
-
-
-// Types
-
-
-// React.js
-import { useRef, useState, useEffect } from "react"
+import AddApplication from "@/components/single-use/client/AddApplication/AddApplication"
+import Applications from "@/components/single-use/client/Applications/Applications"
 
 // Style
 import styles from "./Main.module.scss"
 
-// Assets
-import asset from "@/public/favicon.ico"
-
-
-// Next.js
-import Image from "next/image"
-import Link from "next/link"
-
-// Functions
-
-
-// Constants
-
-
-interface MainProps {
-    
-}
-
-export default function Main({  }: MainProps) {
+export default function Main() {
     return (
         <div className={styles.container}>
-            Main
+            <AddApplication />
+            <Applications />
         </div>
     )
 }

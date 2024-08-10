@@ -1,0 +1,75 @@
+@import "/styles/globals/config";
+
+.container {
+    width: 100vw;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+}
+
+.titles {
+    display: flex;
+    gap: 20px;
+}
+
+.row {
+    display: flex;
+    gap: 20px;
+}
+
+.status {
+    width: 200px;
+    overflow: hidden;
+}
+
+.company {
+    width: 200px;
+    overflow: hidden;
+    
+}
+
+.location {
+    width: 200px;
+    overflow: hidden;
+    
+}
+
+.email {
+    width: 200px;
+    overflow: hidden;
+    
+}
+
+.date {
+    width: 200px;
+    overflow: hidden;
+    
+}
+
+.website {
+    width: 200px;
+    overflow: hidden;
+    
+}
+
+.notes {
+    width: 200px;
+    overflow: hidden;
+    
+}
+
+.btn {
+    cursor: pointer;
+}
+
+.btnRed {
+    cursor: pointer;
+}
+
+.btnBlue {
+    cursor: pointer;
+}
+
+.btnGreen {
+    cursor: pointer;
+}

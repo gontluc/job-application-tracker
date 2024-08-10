@@ -1,18 +1,20 @@
 "use client"
 
-// Types
-import { ApplicationsDataInteraface } from "@/types/applications"
+// Contexts
+import { ApplicationsContext } from "@/providers/applications/applications"
 
 // Utils
+import { setApplicationsData } from "@/utils/client/applicationsActions"
 import { MAX_FYLE_SIZE } from "@/utils/client/globals"
-import sanitize from "@/utils/client/sanitization"
-import validate from "@/utils/client/validation"
+
+// Types
+import { ApplicationsContextInterface } from "@/types/applications"
+
+// React.js
+import { useState, useCallback, useContext } from "react"
 
 // Types
 import { FileRejection } from "react-dropzone"
-
-// React.js
-import { useState, useCallback } from "react"
 
 // Style
 import styles from "./UploadBtn.module.scss"
@@ -20,19 +22,8 @@ import styles from "./UploadBtn.module.scss"
 // React Dropzone
 import { useDropzone } from "react-dropzone"
 
-// Functions
-
-async function parse(dataString: string) {
-    try {
-        return JSON.parse(dataString)
-
-    } catch (error) {
-        console.log("Error parsing JSON")
-    }
-}
-
 // File Reader API
-function readFile(file: File) {
+function readFile(file: File, context: ApplicationsContextInterface) {
 
     const reader = new FileReader()
 
@@ -41,17 +32,7 @@ function readFile(file: File) {
     reader.onerror = () => console.log('file reading has failed')
     reader.onload = () => {
 
-        parse(reader.result as string)
-
-            .then((unvalidatedData: unknown) => validate(unvalidatedData))
-
-            .then((unsanitaziedData: ApplicationsDataInteraface) => sanitize(unsanitaziedData))
-
-            /* .then((data: ApplicationsDataInteraface) => updateApplicationsContext(data)) */
-
-            .catch((/* error */) => {
-                // Failed in one of the steps
-            })
+        setApplicationsData(reader.result as string, context)
     }
 
     // Read file
@@ -96,6 +77,8 @@ function UploadPopUp({ isActive }: {
 
 function Dropzone() {
 
+    const context = useContext(ApplicationsContext) as ApplicationsContextInterface
+
     // Will be invoked regardless if the dropped files were accepted or rejected
     const onDrop = useCallback((acceptedFiles: File[], fileRejections: FileRejection[]) => {
 
@@ -111,7 +94,7 @@ function Dropzone() {
 
             console.log('File accepted')
 
-            readFile(file)
+            readFile(file, context)
         })
     }, [])
 

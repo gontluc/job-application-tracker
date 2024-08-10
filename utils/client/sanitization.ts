@@ -1,5 +1,5 @@
 // Types
-import { ApplicationsDataInteraface } from "@/types/applications"
+import { ApplicationInterface, ApplicationsDataInteraface } from "@/types/applications"
 
 // DOM Purify
 import DOMPurify from "dompurify"
@@ -7,15 +7,19 @@ import DOMPurify from "dompurify"
 // Functions
 
 type SanitizeDataType = 
-    ApplicationsDataInteraface | string | {[key: string]: any}[] | {[key: string]: any}
+    ApplicationsDataInteraface 
+    | ApplicationInterface 
+    | string 
+    | {[key: string]: any}[] 
+    | {[key: string]: any}
 
-function sanitizeData(data: SanitizeDataType): SanitizeDataType {
+function sanitizeData<T extends SanitizeDataType>(data: T): T {
 
     if (typeof data === 'string') {
-        return DOMPurify.sanitize(data)
+        return DOMPurify.sanitize(data) as T
 
     } else if (Array.isArray(data)) {
-        return data.map(item => sanitizeData(item))
+        return data.map(item => sanitizeData(item)) as T
 
     } else if (typeof data === 'object' && data !== null) {
 
@@ -28,14 +32,16 @@ function sanitizeData(data: SanitizeDataType): SanitizeDataType {
             sanitizedObject[key] = sanitizeData(data[key])
         }
 
-        return sanitizedObject
+        return sanitizedObject as T
     }
     return data
 }
 
-export default function sanitize(data: ApplicationsDataInteraface): ApplicationsDataInteraface {
+type SanitizeType = ApplicationsDataInteraface | ApplicationInterface
+
+export default async function sanitize<T extends SanitizeType>(data: T): Promise<T> {
     try {
-        const sanitizedData = sanitizeData(data) as ApplicationsDataInteraface
+        const sanitizedData = sanitizeData(data)
 
         console.log('Sanitized')
 

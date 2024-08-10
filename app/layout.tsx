@@ -1,3 +1,6 @@
+// Providers
+import ApplicationsProvider from "@/providers/applications/applications"
+
 // Font
 import { Inter } from "next/font/google"
 
@@ -26,7 +29,11 @@ export default function RootLayout({ children }: Readonly<{
     return (
         <html lang="en">
             <body className={inter.className}>
-                {children}
+
+                <ApplicationsProvider>
+                    {children}
+                </ApplicationsProvider>
+                
             </body>
         </html>
     )

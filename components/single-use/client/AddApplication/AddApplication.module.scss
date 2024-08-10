@@ -1,0 +1,14 @@
+@import "/styles/globals/config";
+
+.container {
+    
+}
+
+.specialClass {
+    display: none;
+    visibility: hidden
+}
+
+.btn {
+    @include blueBtn($roundBorderRadius);
+}
