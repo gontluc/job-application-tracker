@@ -167,6 +167,8 @@ export function editApplication(
     id: string, 
     data: FormStateInterface
 ) {
+
+    console.log('gegegeg')
     
     /* const newApplications = applications.map((application) => {
         if (application.id !== id) {

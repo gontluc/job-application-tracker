@@ -7,7 +7,7 @@
 
 
 // React.js
-import React, { useRef, useState, useEffect, useContext } from "react"
+import React, { useRef, useState, useEffect, useContext, useId } from "react"
 
 // Style
 import styles from "./Applications.module.scss"
@@ -90,7 +90,11 @@ function Row({ application, context }: {
     const editContainerRef = useRef<HTMLDivElement>(null)
     const deleteContainerRef = useRef<HTMLDivElement>(null)
 
+    const containerRef = useRef<HTMLDivElement>(null)
+
     const formRef = useRef<HTMLFormElement>(null)
+
+    const formId = useId()
 
     const rowContainerId = `Row-${application.id}`
 
@@ -164,13 +168,12 @@ function Row({ application, context }: {
         editContainerRef,
         deleteContainerRef
     ]
-    useListenClickOutside(
-        editting, Edit.cancel, rowContainerId, insideContainersRefs, activeListener
-    )
-    useListenClickOutside(
+    useListenClickOutside(editting, Edit.cancel, containerRef)
+    useListenClickOutside(deletting, Delete.cancel, containerRef)
+    /* useListenClickOutside(
         deletting, Delete.cancel, rowContainerId, insideContainersRefs, activeListener
     )
-
+ */
     function handleFormAction(formData: FormData) {
 
         Edit.save()
@@ -183,7 +186,7 @@ function Row({ application, context }: {
 
     return (
         <div
-            id={rowContainerId}
+            ref={containerRef}
             className={styles.row}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
@@ -205,7 +208,7 @@ function Row({ application, context }: {
                 </>
                 :
                 <>
-                    <form ref={formRef} autoComplete="off" className={styles.row}>
+                    <form id={formId} ref={formRef} autoComplete="off" className={styles.row}>
 
                         {/* This will later be a component */}
                         <div className={styles.status}>{application.status}</div>
@@ -303,9 +306,11 @@ function Row({ application, context }: {
                 <div className={styles.actionsContainer} ref={editContainerRef}>
 
                     <button
+                        type="submit"
+                        form={formId}
                         className={styles.btnGreen}
                         aria-label="Click to save application"
-                        /* onClick={handleFormAction} */
+                        formAction={handleFormAction}
                     >
                         Save
                     </button>

@@ -1,35 +1,37 @@
 // React.js
-import { RefObject, useEffect, useRef } from 'react'
+import { RefObject, useEffect } from 'react'
 
 export default function useListenClickOutside(
     containerActiveState: boolean,
     callback: () => void,
-    containerId: string,
-    insideContainersRefs: RefObject<HTMLDivElement>[],
-    activeListener: boolean
+    containerRef: RefObject<HTMLElement>,
+    toggleContainersRef?: RefObject<HTMLElement>[]
 ) {
-
-    const ignoreFirstClick = useRef<boolean>(true)
 
     function closeContainer(event: Event) {
 
-        if (ignoreFirstClick.current) {
-            ignoreFirstClick.current = false
-            return
-        }
+        const container = containerRef.current
 
-        const container: HTMLElement | null = document.querySelector('#' + containerId)
+        const clickedInsideMainContainer = 
+            container && (container === event.target || container.contains(event.target as Node))
 
-        const clickedInside = 
-            container?.contains(event.target as Node) ||
-            insideContainersRefs.every((ref) => {
-                !ref.current
-            })
+        const clickedInsideToggleContainers = toggleContainersRef?.reduce((toggleContainerRef) => {
+            return toggleContainerRef.current?.contains(event.target as Node)/* i was here */
+        })
+            
+
+        const clickedInside = clickedInsideMainContainer || clickedInsideToggleContainers
+
+        console.log('event.target', event.target)
+        console.log('container', container)
+        console.log(clickedInside)
+
 
         // If clicked on the space outside of the container
         if (!clickedInside){
             callback()
             window.removeEventListener('click', closeContainer)
+            console.log('stopped')
         }
     }
 
@@ -44,13 +46,11 @@ export default function useListenClickOutside(
 
     useEffect(() => {
 
-        if (containerActiveState && activeListener) {
+        if (containerActiveState) {
             // Add event listener if container is active
             window.addEventListener('click', closeContainer)
-
-            // Subsequent toggles
-            ignoreFirstClick.current = true
+            console.log('listening')
         }
 
-    }, [containerActiveState, activeListener])
+    }, [containerActiveState])
 }
