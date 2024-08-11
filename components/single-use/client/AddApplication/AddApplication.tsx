@@ -3,7 +3,6 @@
 // Types
 import { HTMLInputTypeAttribute } from "react"
 
-
 // React.js
 import { useRef, useState, useEffect, useContext, useId } from "react"
 
@@ -25,6 +24,7 @@ import { addApplication } from "@/utils/client/applicationsActions"
 import { ApplicationsContext } from "@/providers/applications/applications"
 import { MAX_LENGTH_NOTES, MAX_LENGTH_SHORT_TEXT, MAX_LENGTH_WEBSITE } from "@/utils/client/globals"
 import { ApplicationsContextInterface } from "@/types/applications"
+import Input from "@/components/reusable/client/Input/Input"
 
 export default function AddApplication() {
 
@@ -48,6 +48,7 @@ export default function AddApplication() {
             <form ref={formRef} action={handleFormAction} autoComplete="off">
 
                 <Input 
+                    style="new application"
                     type="text" 
                     name="company" 
                     text="Company" 
@@ -55,6 +56,7 @@ export default function AddApplication() {
                 />
 
                 <Input 
+                    style="new application"
                     type="text" 
                     name="location" 
                     text="Location"
@@ -62,6 +64,7 @@ export default function AddApplication() {
                 />
 
                 <Input 
+                    style="new application"
                     type="email" 
                     name="email" 
                     text="Email"
@@ -69,6 +72,7 @@ export default function AddApplication() {
                 />
 
                 <Input 
+                    style="new application"
                     type="url" 
                     name="website" 
                     text="Website" 
@@ -77,6 +81,7 @@ export default function AddApplication() {
                 />
 
                 <Input 
+                    style="new application"
                     type="text" 
                     name="notes" 
                     text="Notes" 
@@ -86,49 +91,24 @@ export default function AddApplication() {
 
                 {/* Honeypot */}
                 <Input 
+                    style="honeypot"
                     type="text" 
                     name="address" 
                     text="Address" 
                     required={false} 
                     maxLength={MAX_LENGTH_SHORT_TEXT}
-                    honeypot={true}
                 />
 
                 <button 
                     type="submit"
                     className={styles.btn}
+                    aria-label="Click to add new job application"
                 >
                     Add application
                 </button>
 
             </form>
 
-        </div>
-    )
-}
-
-function Input({ type, name, text, required = true, maxLength, honeypot = false }: {
-    type: HTMLInputTypeAttribute,
-    name: string,
-    text: string,
-    required?: boolean,
-    maxLength?: number,
-    honeypot?: boolean
-}) {
-
-    const id = useId()
-
-    return (
-        <div className={honeypot ? styles.specialClass : undefined}>
-            <label htmlFor={id}>{text}</label>{/* this is display none?, ask gpt if accessibility still works, if not then change Upload component css too */}
-            <input 
-                type={type} 
-                id={id}
-                name={name} 
-                required={required}
-                maxLength={maxLength}
-                aria-hidden={honeypot ? "true" : undefined}
-            />
         </div>
     )
 }

@@ -1,10 +1,19 @@
 @import "/styles/globals/config";
 
 .container {
-    width: 100vw;
-    overflow: scroll;
+    width: 100%;
     display: flex;
     flex-direction: column;
+    gap: 20px;
+    max-height: 100vh;
+}
+
+.subContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow: auto;
 }
 
 .titles {
@@ -13,63 +22,68 @@
 }
 
 .row {
+    width: fit-content;
     display: flex;
     gap: 20px;
+    position: relative;
+    padding: 10px 0;
+
+    &:hover {
+        background-color: rgb(222, 222, 243)
+    }
 }
 
 .status {
-    width: 200px;
-    overflow: hidden;
+    @include tableElement;
 }
 
 .company {
-    width: 200px;
-    overflow: hidden;
-    
+    @include tableElement;
 }
 
 .location {
-    width: 200px;
-    overflow: hidden;
-    
+    @include tableElement;
 }
 
 .email {
-    width: 200px;
-    overflow: hidden;
-    
+    @include tableElement;
 }
 
 .date {
-    width: 200px;
-    overflow: hidden;
-    
+    @include tableElement;
 }
 
 .website {
-    width: 200px;
-    overflow: hidden;
-    
+    @include tableElement;
 }
 
 .notes {
-    width: 200px;
-    overflow: hidden;
-    
+    @include tableElement;
+    width: auto;
+}
+
+.actionsContainer {
+    position: sticky;
+    background-color: #ccc;
+    right: 10vw;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    gap: 10px;
 }
 
 .btn {
-    cursor: pointer;
+    @include blueBtn;
 }
 
 .btnRed {
-    cursor: pointer;
+    @include blueBtn;
 }
 
 .btnBlue {
-    cursor: pointer;
+    @include blueBtn;
 }
 
 .btnGreen {
-    cursor: pointer;
+    @include blueBtn;
 }

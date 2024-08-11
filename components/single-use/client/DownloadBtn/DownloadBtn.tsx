@@ -7,7 +7,7 @@
 
 
 // React.js
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState, useEffect, useContext } from "react"
 
 // Style
 import styles from "./DownloadBtn.module.scss"
@@ -19,6 +19,8 @@ import asset from "@/public/favicon.ico"
 // Next.js
 import Image from "next/image"
 import Link from "next/link"
+import { ApplicationInterface, ApplicationsContextInterface } from "@/types/applications"
+import { ApplicationsContext } from "@/providers/applications/applications"
 
 // Functions
 
@@ -26,23 +28,18 @@ import Link from "next/link"
 // Constants
 
 
-interface DownloadBtnProps {
+export default function DownloadBtn() {
 
-}
-
-export default function DownloadBtn({ }: DownloadBtnProps) {
-
-    const [applications, setApplications] = useState([
-        {
-            company: "abc"
-        }
-    ])
-
-    // Functions
+    const { applications } = useContext(ApplicationsContext) as {
+        applications: ApplicationInterface[]
+    }
 
     function handleClick() {
         // Return if no data
-        if (applications.length === 0) { return }
+        if (applications.length === 0) { 
+            console.log("No data to download, please add an application")
+            return 
+        }
 
         // Convert to JSON string
         const dataString = JSON.stringify({
@@ -75,7 +72,7 @@ export default function DownloadBtn({ }: DownloadBtnProps) {
         <button 
             className={styles.container} 
             onClick={handleClick}
-            aria-label="Download job applications data as JSON"
+            aria-label="Click to download job applications data as JSON"
         >
             Download
         </button>

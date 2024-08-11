@@ -1,28 +1,35 @@
 // React.js
-import { RefObject, useEffect } from 'react'
+import { RefObject, useEffect, useRef } from 'react'
 
 export default function useListenClickOutside(
     containerActiveState: boolean,
     callback: () => void,
     containerId: string,
-    insideContainersRefs: RefObject<HTMLDivElement[]>
+    insideContainersRefs: RefObject<HTMLDivElement>[],
+    activeListener: boolean
 ) {
 
+    const ignoreFirstClick = useRef<boolean>(true)
+
     function closeContainer(event: Event) {
+
+        if (ignoreFirstClick.current) {
+            ignoreFirstClick.current = false
+            return
+        }
 
         const container: HTMLElement | null = document.querySelector('#' + containerId)
 
         const clickedInside = 
             container?.contains(event.target as Node) ||
-            insideContainersRefs.current.
-
-        console.log("outside:", !clickedInside)
+            insideContainersRefs.every((ref) => {
+                !ref.current
+            })
 
         // If clicked on the space outside of the container
         if (!clickedInside){
             callback()
             window.removeEventListener('click', closeContainer)
-            console.log('closed', event.target, container)
         }
     }
 
@@ -37,10 +44,13 @@ export default function useListenClickOutside(
 
     useEffect(() => {
 
-        if (containerActiveState) {
+        if (containerActiveState && activeListener) {
             // Add event listener if container is active
             window.addEventListener('click', closeContainer)
+
+            // Subsequent toggles
+            ignoreFirstClick.current = true
         }
 
-    }, [containerActiveState])
+    }, [containerActiveState, activeListener])
 }

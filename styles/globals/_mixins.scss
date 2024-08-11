@@ -37,7 +37,7 @@
     
     font-weight: 500;
     font-size: 18px;
-    cursor: pointer; 
+    cursor: pointer;
 
     &:active {
         transition: none;
@@ -51,6 +51,8 @@
     @include flexCenter;
     @include padding;
 
+    cursor: pointer;
+
     &:hover {
         background-color: $lightBlue;
     }
@@ -59,4 +61,11 @@
         transition: none;
         transform: scale(.85);
     }
+}
+
+@mixin tableElement {
+    min-width: 200px;
+    width: 200px;
+    overflow: hidden;
+    text-wrap: nowrap;
 }

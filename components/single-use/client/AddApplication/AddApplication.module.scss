@@ -4,11 +4,6 @@
     
 }
 
-.specialClass {
-    display: none;
-    visibility: hidden
-}
-
 .btn {
     @include blueBtn($roundBorderRadius);
 }

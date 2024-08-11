@@ -9,7 +9,8 @@ import {
     ApplicationInterface, 
     ApplicationsContextInterface, 
     ApplicationsDataInteraface, 
-    ApplicationStatus 
+    ApplicationStatus, 
+    FormStateInterface
 } from "@/types/applications"
 
 // Check honey pot
@@ -49,24 +50,45 @@ function checkRepeatedEmail(
 // Update applications context
 function updateApplicationsContext(
     action: "add" | "edit" | "delete" | "set",
-    setApplications: React.Dispatch<React.SetStateAction<ApplicationInterface[]>>,
-    data?: ApplicationInterface | ApplicationInterface[]
+    context: ApplicationsContextInterface,
+    // Additional parameters
+    additional: {
+        data?: ApplicationInterface | ApplicationInterface[],
+        id?: string
+    }
 ) {
+
+    const { applications, setApplications } = context as {
+        applications: ApplicationInterface[],
+        setApplications: React.Dispatch<React.SetStateAction<ApplicationInterface[]>>
+    }
+
+    const id = additional.id as string
+
     switch (action) {
 
         case "add":
-            setApplications(prevState => [...prevState, data as ApplicationInterface])
+            const newApplication = additional.data as ApplicationInterface
+            setApplications(prevState => [...prevState, newApplication])
+
             console.log("Added new application")
             break
 
         case "edit":
+            const updatedEdittedApplications = []
             break
 
         case "delete":
+            const updatedDeletedApplications = applications.filter((application) => application.id !== id)
+            setApplications(updatedDeletedApplications)
+
+            console.log('Deleted application')
             break
 
         case "set":
-            setApplications(data as ApplicationInterface[])
+            const data = additional.data as ApplicationInterface[]
+            setApplications(data)
+
             console.log("Updated data")
             break
 
@@ -118,9 +140,8 @@ export function addApplication(
     context: ApplicationsContextInterface
 ): void {
 
-    const { applications, setApplications } = context as {
-        applications: ApplicationInterface[],
-        setApplications: React.Dispatch<React.SetStateAction<ApplicationInterface[]>>
+    const { applications } = context as {
+        applications: ApplicationInterface[]
     }
 
     processData(data, applications)
@@ -132,7 +153,7 @@ export function addApplication(
         .then((newApplication: ApplicationInterface) => checkRepeatedEmail(newApplication, applications))
 
         .then((newApplication: ApplicationInterface) => 
-            updateApplicationsContext("add", setApplications, newApplication)
+            updateApplicationsContext("add", context, { data: newApplication })
         )
 
         .catch((/* error */) => {
@@ -142,18 +163,28 @@ export function addApplication(
 }
 
 export function editApplication(
-    id: string, 
     context: ApplicationsContextInterface,
-    data: ApplicationInterface
+    id: string, 
+    data: FormStateInterface
 ) {
-    console.log('editted', id)
+    
+    /* const newApplications = applications.map((application) => {
+        if (application.id !== id) {
+            return 
+        }
+
+        return application
+    })
+
+    updateApplicationsContext("edit", setApplications, newApplications) */
 }
 
 export function deleteApplication(
-    id: string,
-    context: ApplicationsContextInterface
+    context: ApplicationsContextInterface,
+    id: string
 ) {
-    console.log('deleted', id)
+
+    updateApplicationsContext("delete", context, { id })
 }
 
 export function setApplicationsData(
@@ -161,19 +192,16 @@ export function setApplicationsData(
     context: ApplicationsContextInterface
 ) {
 
-    const { setApplications } = context as {
-        setApplications: React.Dispatch<React.SetStateAction<ApplicationInterface[]>>
-    }
-
     parseData(data)
 
         .then((unvalidatedData: ApplicationsDataInteraface) => validateApplications(unvalidatedData))
 
         .then((unsanitaziedData: ApplicationsDataInteraface) => sanitize(unsanitaziedData))
 
-        .then((data: ApplicationsDataInteraface) => 
-            updateApplicationsContext("set", setApplications, data.applications)
-        )
+        .then((applicationsData: ApplicationsDataInteraface) => {
+            const data = applicationsData.applications
+            updateApplicationsContext("set", context, { data })
+        })
 
         .catch((/* error */) => {
             // Failed in a previous step

@@ -1,0 +1,14 @@
+@import "/styles/globals/config";
+
+.defaultContainer {
+    @include tableElement;
+}
+
+.containerNewApplication {
+
+}
+
+.specialContainer {
+    display: none;
+    visibility: hidden
+}
