@@ -21,9 +21,3 @@ export interface ApplicationsContextInterface {
     applications: ApplicationInterface[] | null,
     setApplications: React.Dispatch<React.SetStateAction<ApplicationInterface[] | null>>
 }
-
-export interface FormStateInterface {
-    changedEmail: boolean,
-    changedOriginal: boolean,
-    data: ApplicationInterface
-}

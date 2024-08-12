@@ -5,17 +5,16 @@ import sanitize from "@/utils/client/sanitization"
 import parseData from "@/utils/client/parseData"
 
 // Types
-import { 
-    ApplicationInterface, 
-    ApplicationsContextInterface, 
-    ApplicationsDataInteraface, 
-    ApplicationStatus, 
-    FormStateInterface
+import {
+    ApplicationInterface,
+    ApplicationsContextInterface,
+    ApplicationsDataInteraface,
+    ApplicationStatus
 } from "@/types/applications"
 
 // Check honey pot
 function checkHoneypot(honeypot: string): void {
-    
+
     if (honeypot) {
         console.log('Not human activity detected')
         throw new Error()
@@ -47,6 +46,15 @@ function checkRepeatedEmail(
     return newApplication
 }
 
+// Check if user changed original application email
+function emailWasEditted(applications: ApplicationInterface[], newApplication: ApplicationInterface) {
+
+    const application =
+        applications.find((application) => application.id === newApplication.id) as ApplicationInterface
+
+    return application.email !== newApplication.email
+}
+
 // Update applications context
 function updateApplicationsContext(
     action: "add" | "edit" | "delete" | "set",
@@ -75,7 +83,17 @@ function updateApplicationsContext(
             break
 
         case "edit":
-            const updatedEdittedApplications = []
+            const newEdditedApplication = additional.data as ApplicationInterface
+
+            const updatedEdittedApplications = applications.map((application) => {
+                if (application.id === id) {
+                    return newEdditedApplication
+                }
+                return application
+            })
+            setApplications(updatedEdittedApplications)
+
+            console.log("Saved application")
             break
 
         case "delete":
@@ -98,11 +116,16 @@ function updateApplicationsContext(
 }
 
 async function processData(
-    data: FormData, 
-    applications: ApplicationInterface[]
+    data: FormData,
+    applications: ApplicationInterface[],
+    isApplicationEdit: boolean = false,
+    applicationEditId?: string,
 ): Promise<ApplicationInterface> {
 
-    const id = crypto.randomUUID()
+    const id = isApplicationEdit
+        ? applicationEditId as string
+        : crypto.randomUUID()
+
     const status: ApplicationStatus = "waiting"
     const date = (new Date()).toISOString()
 
@@ -128,7 +151,9 @@ async function processData(
         ...(notes !== "" && { notes })
     }
 
-    checkMaxApplications(applications)
+    if (!isApplicationEdit) {
+        checkMaxApplications(applications)
+    }
 
     checkHoneypot(honeypot)
 
@@ -152,7 +177,7 @@ export function addApplication(
 
         .then((newApplication: ApplicationInterface) => checkRepeatedEmail(newApplication, applications))
 
-        .then((newApplication: ApplicationInterface) => 
+        .then((newApplication: ApplicationInterface) =>
             updateApplicationsContext("add", context, { data: newApplication })
         )
 
@@ -164,21 +189,35 @@ export function addApplication(
 
 export function editApplication(
     context: ApplicationsContextInterface,
-    id: string, 
-    data: FormStateInterface
+    id: string,
+    data: FormData
 ) {
 
-    console.log('gegegeg')
-    
-    /* const newApplications = applications.map((application) => {
-        if (application.id !== id) {
-            return 
-        }
+    const { applications } = context as {
+        applications: ApplicationInterface[]
+    }
 
-        return application
-    })
+    processData(data, applications, true, id)
 
-    updateApplicationsContext("edit", setApplications, newApplications) */
+        .then((unvalidatedApplication: ApplicationInterface) => validateApplication(unvalidatedApplication))
+
+        .then((unsanitaziedApplication: ApplicationInterface) => sanitize(unsanitaziedApplication))
+
+        .then((newEdittedApplication: ApplicationInterface) => {
+            if (emailWasEditted(applications, newEdittedApplication)) {
+                return checkRepeatedEmail(newEdittedApplication, applications)
+            }
+
+            return newEdittedApplication
+        })
+
+        .then((newEdittedApplication: ApplicationInterface) =>
+            updateApplicationsContext("edit", context, { data: newEdittedApplication, id: id })
+        )
+
+        .catch((/* error */) => {
+            // Failed in a previous step
+        })
 }
 
 export function deleteApplication(
