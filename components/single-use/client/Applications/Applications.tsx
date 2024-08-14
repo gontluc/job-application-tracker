@@ -26,6 +26,7 @@ import useListenClickOutside from "@/custom-hooks/useListenClickOutside"
 import Input from "@/components/reusable/client/Input/Input"
 import { MAX_LENGTH_NOTES, MAX_LENGTH_SHORT_TEXT, MAX_LENGTH_WEBSITE } from "@/utils/client/globals"
 import { Action } from "@/classes/action"
+import Honeypot from "@/components/reusable/client/Honeypot/Honeypot"
 // Functions
 
 
@@ -208,15 +209,7 @@ function EditRowForm({ formId, formRef, application }: {
                 value={application.notes}
             />
 
-            {/* Honeypot */}
-            <Input
-                style="honeypot"
-                type="text"
-                name="address"
-                text="Address"
-                required={false}
-                maxLength={MAX_LENGTH_SHORT_TEXT}
-            />
+            <Honeypot />
 
         </form>
     )

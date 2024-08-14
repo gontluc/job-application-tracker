@@ -1,6 +1,6 @@
 // Utils
 import { validateApplication, validateApplications } from "@/utils/client/validation"
-import { MAX_APPLICATIONS } from "@/utils/client/globals"
+import { DEFAULT_DATA, MAX_APPLICATIONS } from "@/utils/client/globals"
 import sanitize from "@/utils/client/sanitization"
 import parseData from "@/utils/client/parseData"
 
@@ -30,7 +30,7 @@ function checkMaxApplications(applications: ApplicationInterface[]): void {
     }
 }
 
-// Check if applications have the same email
+// Check if email already exists
 function checkRepeatedEmail(
     newApplication: ApplicationInterface, applications: ApplicationInterface[]
 ): ApplicationInterface {
@@ -44,6 +44,24 @@ function checkRepeatedEmail(
     }
 
     return newApplication
+}
+
+// Check for any repeated emails
+function checkAllEmails(applicationsData: ApplicationsDataInteraface): ApplicationsDataInteraface {
+
+    let emails: string[] = []
+
+    // Go through each email and throw error if repeated
+    applicationsData.applications.forEach((app) => {
+
+        if (emails.includes(app.email)) {
+            throw new Error()
+        }
+
+        emails.push(app.email)
+    })
+
+    return applicationsData
 }
 
 // Check if user changed original application email
@@ -230,14 +248,21 @@ export function deleteApplication(
 
 export function setApplicationsData(
     data: string,
-    context: ApplicationsContextInterface
+    context: ApplicationsContextInterface,
+    isFirstPageLoad?: boolean
 ) {
+
+    const { setApplications } = context as {
+        setApplications: React.Dispatch<React.SetStateAction<ApplicationInterface[]>>
+    }
 
     parseData(data)
 
         .then((unvalidatedData: ApplicationsDataInteraface) => validateApplications(unvalidatedData))
 
         .then((unsanitaziedData: ApplicationsDataInteraface) => sanitize(unsanitaziedData))
+
+        .then((applicationsData: ApplicationsDataInteraface) => checkAllEmails(applicationsData))
 
         .then((applicationsData: ApplicationsDataInteraface) => {
             const data = applicationsData.applications
@@ -246,5 +271,10 @@ export function setApplicationsData(
 
         .catch((/* error */) => {
             // Failed in a previous step
+
+            // Set to default data if it's first page load
+            if (isFirstPageLoad) {
+                setApplications(DEFAULT_DATA)
+            }
         })
 }

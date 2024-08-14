@@ -25,6 +25,7 @@ import { ApplicationsContext } from "@/providers/applications/applications"
 import { MAX_LENGTH_NOTES, MAX_LENGTH_SHORT_TEXT, MAX_LENGTH_WEBSITE } from "@/utils/client/globals"
 import { ApplicationsContextInterface } from "@/types/applications"
 import Input from "@/components/reusable/client/Input/Input"
+import Honeypot from "@/components/reusable/client/Honeypot/Honeypot"
 
 export default function AddApplication() {
 
@@ -89,15 +90,7 @@ export default function AddApplication() {
                     maxLength={MAX_LENGTH_NOTES}
                 />
 
-                {/* Honeypot */}
-                <Input 
-                    style="honeypot"
-                    type="text" 
-                    name="address" 
-                    text="Address" 
-                    required={false} 
-                    maxLength={MAX_LENGTH_SHORT_TEXT}
-                />
+                <Honeypot />
 
                 <button 
                     type="submit"

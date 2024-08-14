@@ -15,6 +15,7 @@ import {
     ApplicationsContextInterface, 
     ApplicationsDataInteraface 
 } from "@/types/applications"
+import { setApplicationsData } from "@/utils/client/applicationsActions"
 
 // Create Context
 export const ApplicationsContext = createContext<ApplicationsContextInterface | undefined>(undefined)
@@ -34,23 +35,7 @@ export default function ApplicationsProvider({ children }: Readonly<{
 
         // If there is data in local storage
         if (lsDataString) {
-
-            parseData(lsDataString)
-                
-                .then((unvalidatedData: ApplicationsDataInteraface) => 
-                    validateApplications(unvalidatedData)
-                )
-
-                .then((unsanitaziedData: ApplicationsDataInteraface) => sanitize(unsanitaziedData))
-
-                .then((data: ApplicationsDataInteraface) => setApplications(data.applications))
-
-                .catch((/* error */) => {
-                    // Failed in a previous step
-                    
-                    // Set to default data
-                    setApplications(DEFAULT_DATA)
-                })
+            setApplicationsData(lsDataString, {applications, setApplications}, true)
 
         } else {
             // If no data in local storage then set to default data
