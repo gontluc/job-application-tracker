@@ -100,6 +100,14 @@ function Row({ application, context }: {
         }
     }
 
+    function displayData(data: string | undefined) {
+        if (!data) {
+            return "-"
+        }
+
+        return data
+    }
+
     return (
         <div
             ref={containerRef}
@@ -115,12 +123,29 @@ function Row({ application, context }: {
                     {/* This will later be a component */}
                     <div className={styles.status}>{application.status}</div>
 
-                    <div className={styles.company}>{application.company}</div>
-                    <div className={styles.location}>{application.location}</div>
-                    <div className={styles.email}>{application.email}</div>
-                    <div className={styles.date}>{application.date}</div>
-                    <div className={styles.website}>{application.website}</div>
-                    <div className={styles.notes}>{application.notes}</div>
+                    <div className={styles.company}>
+                        {displayData(application.company)}
+                    </div>
+
+                    <div className={styles.location}>
+                        {displayData(application.location)}
+                    </div>
+
+                    <div className={styles.email}>
+                        {displayData(application.email)}
+                    </div>
+
+                    <div className={styles.date}>
+                        {displayData(application.date)}
+                    </div>
+
+                    <div className={styles.website}>
+                        {displayData(application.website)}
+                    </div>
+
+                    <div className={styles.notes}>
+                        {displayData(application.notes)}
+                    </div>
                 </>
                 :
                 <EditRowForm formId={formId} formRef={formRef} application={application} />

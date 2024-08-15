@@ -1,5 +1,5 @@
 // Utils
-import { MAX_LENGTH_NOTES, MAX_LENGTH_SHORT_TEXT, MAX_LENGTH_WEBSITE } from "@/utils/client/globals"
+import { MAX_APPLICATIONS, MAX_LENGTH_NOTES, MAX_LENGTH_SHORT_TEXT, MAX_LENGTH_WEBSITE } from "@/utils/client/globals"
 
 // Types
 import { ApplicationInterface, ApplicationsDataInteraface, applicationStatusArray } from "@/types/applications"
@@ -42,7 +42,7 @@ const applicationSchema = z.object({
 })
 
 const applicationsSchema = z.object({
-    applications: z.array(applicationSchema)
+    applications: z.array(applicationSchema).max(MAX_APPLICATIONS)
 })
 
 export async function validateApplications(
