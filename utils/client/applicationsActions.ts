@@ -1,6 +1,6 @@
 // Utils
 import { validateApplication, validateApplications } from "@/utils/client/validation"
-import { DEFAULT_DATA, MAX_APPLICATIONS } from "@/utils/client/globals"
+import { DEFAULT_DATA, INITIAL_STATUS, MAX_APPLICATIONS } from "@/utils/client/globals"
 import sanitize from "@/utils/client/sanitization"
 import parseData from "@/utils/client/parseData"
 
@@ -11,6 +11,7 @@ import {
     ApplicationsDataInteraface,
     ApplicationStatus
 } from "@/types/applications"
+import { EditApplicationData } from "@/classes/action"
 
 // Check honey pot
 function checkHoneypot(honeypot: string): void {
@@ -75,11 +76,11 @@ function emailWasEditted(applications: ApplicationInterface[], newApplication: A
 
 // Update applications context
 function updateApplicationsContext(
-    action: "add" | "edit" | "delete" | "set",
+    action: "add" | "status-edit" | "edit" | "delete" | "set",
     context: ApplicationsContextInterface,
     // Additional parameters
     additional: {
-        data?: ApplicationInterface | ApplicationInterface[],
+        data?: ApplicationInterface | ApplicationInterface[] | ApplicationStatus,
         id?: string
     }
 ) {
@@ -98,6 +99,23 @@ function updateApplicationsContext(
             setApplications(prevState => [...prevState, newApplication])
 
             console.log("Added new application")
+            break
+
+        case "status-edit":
+            const newStatus = additional.data as ApplicationStatus
+
+            const updatedStatusEdittedApplications = applications.map((application) => {
+                if (application.id === id) {
+                    return {
+                        ...application,
+                        status: newStatus
+                    }
+                }
+                return application
+            })
+            setApplications(updatedStatusEdittedApplications)
+
+            console.log("Saved application")
             break
 
         case "edit":
@@ -134,26 +152,28 @@ function updateApplicationsContext(
 }
 
 async function processData(
-    data: FormData,
+    data: EditApplicationData,
     applications: ApplicationInterface[],
     isApplicationEdit: boolean = false,
     applicationEditId?: string,
 ): Promise<ApplicationInterface> {
 
+    const formData = data.formData as FormData
+
     const id = isApplicationEdit
         ? applicationEditId as string
         : crypto.randomUUID()
 
-    const status: ApplicationStatus = "waiting"
+    const status: ApplicationStatus = data.status as ApplicationStatus
     const date = (new Date()).toISOString()
 
-    const company = data.get("company") as string
-    const location = data.get("location") as string
-    const email = data.get("email") as string
-    const website = data.get("website") as string
-    const notes = data.get("notes") as string
+    const company = formData.get("company") as string
+    const location = formData.get("location") as string
+    const email = formData.get("email") as string
+    const website = formData.get("website") as string
+    const notes = formData.get("notes") as string
 
-    const honeypot = data.get("address") as string
+    const honeypot = formData.get("address") as string
 
     const newApplication: ApplicationInterface = {
         // New props
@@ -179,12 +199,17 @@ async function processData(
 }
 
 export function addApplication(
-    data: FormData,
+    formData: FormData,
     context: ApplicationsContextInterface
 ): void {
 
     const { applications } = context as {
         applications: ApplicationInterface[]
+    }
+
+    const data: EditApplicationData = {
+        formData,
+        status: INITIAL_STATUS
     }
 
     processData(data, applications)
@@ -208,14 +233,15 @@ export function addApplication(
 export function editApplication(
     context: ApplicationsContextInterface,
     id: string,
-    data: FormData
+    data: EditApplicationData
 ) {
+    if (data.formData) {
 
-    const { applications } = context as {
-        applications: ApplicationInterface[]
-    }
+        const { applications } = context as {
+            applications: ApplicationInterface[]
+        }
 
-    processData(data, applications, true, id)
+        processData(data, applications, true, id)
 
         .then((unvalidatedApplication: ApplicationInterface) => validateApplication(unvalidatedApplication))
 
@@ -236,6 +262,11 @@ export function editApplication(
         .catch((/* error */) => {
             // Failed in a previous step
         })
+
+    } else {
+        // Out-of-form application status change
+        updateApplicationsContext("status-edit", context, { data: data.status, id: id })
+    }
 }
 
 export function deleteApplication(

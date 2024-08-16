@@ -1,6 +1,12 @@
 import { 
-    ApplicationInterface, ApplicationsContextInterface 
+    ApplicationInterface, ApplicationsContextInterface, 
+    ApplicationStatus
 } from "@/types/applications"
+
+export interface EditApplicationData {
+    formData?: FormData,
+    status?: ApplicationStatus
+}
 
 export class Action {
     private context: ApplicationsContextInterface
@@ -9,7 +15,7 @@ export class Action {
     private action: (
         context: ApplicationsContextInterface,
         id: string,
-        data?: FormData
+        data?: EditApplicationData
     ) => void
 
     constructor(
@@ -19,7 +25,7 @@ export class Action {
         action: (
             context: ApplicationsContextInterface,
             id: string,
-            data?: FormData
+            data?: EditApplicationData
         ) => void
     ) {
         this.context = context
@@ -37,10 +43,10 @@ export class Action {
         this.setState(true)
     }
 
-    save = (formData?: FormData) => {
+    save = (data?: EditApplicationData) => {
         // Run applications action
-        if (formData) {
-            this.action(this.context, this.application.id, formData)
+        if (data) {
+            this.action(this.context, this.application.id, data)
         } else {
             this.action(this.context, this.application.id)
         }
@@ -52,5 +58,9 @@ export class Action {
     cancel = () => {
         // Disable mode
         this.disable()
+    }
+
+    toggle = () => {
+        this.setState((prevState) => !prevState)
     }
 }

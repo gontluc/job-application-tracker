@@ -20,12 +20,12 @@ import asset from "@/public/favicon.ico"
 import Image from "next/image"
 import Link from "next/link"
 import { ApplicationsContext } from "@/providers/applications/applications"
-import { ApplicationInterface, ApplicationsContextInterface } from "@/types/applications"
+import { ApplicationInterface, ApplicationsContextInterface, ApplicationStatus, applicationStatusArray } from "@/types/applications"
 import { editApplication, deleteApplication } from "@/utils/client/applicationsActions"
 import useListenClickOutside from "@/custom-hooks/useListenClickOutside"
 import Input from "@/components/reusable/client/Input/Input"
 import { MAX_LENGTH_NOTES, MAX_LENGTH_SHORT_TEXT, MAX_LENGTH_WEBSITE } from "@/utils/client/globals"
-import { Action } from "@/classes/action"
+import { Action, EditApplicationData } from "@/classes/action"
 import Honeypot from "@/components/reusable/client/Honeypot/Honeypot"
 // Functions
 
@@ -38,33 +38,61 @@ export default function Applications() {
         applications, setApplications
     } = useContext(ApplicationsContext) as ApplicationsContextInterface
 
+    function handleCopyEmailsClick() {
+
+        if (!applications) { return }
+
+        const emails = applications?.map((app) => app.email)
+        const emailString = emails.join(", ")
+
+        navigator.clipboard.writeText(emailString)
+            .then(() => {
+                console.log("Emails copied to clipboard")
+            })
+            .catch((/* error */) => {
+                console.error("Failed to copy emails")
+            })
+    }
+
     return (
         <div className={styles.container}>
 
-            <div className={styles.titles}>
-                <div className={styles.status}>Status</div>
-                <div className={styles.company}>Company</div>
-                <div className={styles.location}>Location</div>
-                <div className={styles.email}>Email</div>
-                <div className={styles.date}>Date</div>
-                <div className={styles.website}>Website</div>
-                <div className={styles.notes}>Notes</div>
+            <div className={styles.orderBy}>
+                <p>Order by:</p>
+                { }
             </div>
 
-            <div className={styles.subContainer}>
+            <div className={styles.applicationsContainer}>
 
-                {applications?.map((application) => {
-                    return (
-                        <Row
-                            key={application.id}
-                            application={application}
-                            context={{ applications, setApplications }}
-                        />
-                    )
-                })}
+                <div className={styles.titles}>
+                    <div className={styles.status}>Status</div>
+                    <div className={styles.company}>Company</div>
+                    <div className={styles.location}>Location</div>
+                    <div className={styles.email}>Email</div>
+                    <div className={styles.date}>Date</div>
+                    <div className={styles.website}>Website</div>
+                    <div className={styles.notes}>Notes</div>
+
+                    <div className={styles.copyEmails} onClick={handleCopyEmailsClick}>
+                        Copy All Emails
+                    </div>
+                </div>
+
+                <div className={styles.subContainer}>
+
+                    {applications?.map((application) => {
+                        return (
+                            <Row
+                                key={application.id}
+                                application={application}
+                                context={{ applications, setApplications }}
+                            />
+                        )
+                    })}
+
+                </div>
 
             </div>
-
         </div>
     )
 }
@@ -76,6 +104,7 @@ function Row({ application, context }: {
     const [hovering, setHover] = useState(false)
     const [editting, setEditting] = useState(false)
     const [deletting, setDeletting] = useState(false)
+    const [applicationStatus, setApplicationStatus] = useState<ApplicationStatus>(application.status)
 
     const containerRef = useRef<HTMLDivElement | null>(null)
     const formRef = useRef<HTMLFormElement | null>(null)
@@ -90,9 +119,19 @@ function Row({ application, context }: {
     useListenClickOutside(editting, Edit.cancel, containerRef)
     useListenClickOutside(deletting, Delete.cancel, containerRef)
 
+    useEffect(() => {
+        // Update state on application changes
+        setApplicationStatus(application.status)
+    }, [application.status])
+
     function handleFormAction(formData: FormData) {
 
-        Edit.save(formData)
+        const data = {
+            formData: formData,
+            status: applicationStatus
+        }
+
+        Edit.save(data)
 
         // Reset form
         if (formRef.current) {
@@ -116,12 +155,11 @@ function Row({ application, context }: {
             onMouseLeave={() => setHover(false)}
         >
 
-            {/* Transform to form when edditing mode is active */}
+            {/* Change to form when edditing mode is active */}
             {!editting
                 ?
                 <>
-                    {/* This will later be a component */}
-                    <div className={styles.status}>{application.status}</div>
+                    <AppStatus application={application} context={context} />
 
                     <div className={styles.company}>
                         {displayData(application.company)}
@@ -148,7 +186,13 @@ function Row({ application, context }: {
                     </div>
                 </>
                 :
-                <EditRowForm formId={formId} formRef={formRef} application={application} />
+                <EditRowForm
+                    formId={formId}
+                    formRef={formRef}
+                    application={application}
+                    context={context}
+                    setApplicationStatus={setApplicationStatus}
+                />
             }
 
             <EditDelete
@@ -174,16 +218,93 @@ function Row({ application, context }: {
     )
 }
 
-function EditRowForm({ formId, formRef, application }: {
+function AppStatus({ application, context, setApplicationStatus }: {
+    application: ApplicationInterface
+    context: ApplicationsContextInterface,
+    setApplicationStatus?: React.Dispatch<React.SetStateAction<ApplicationStatus>>
+}) {
+    const [activeDropdown, setDropdown] = useState(false)
+    const [currentStatus, setCurrentStatus] = useState<ApplicationStatus>(application.status)
+    const [otherStatus, setOtherStatus] = useState<ApplicationStatus[]>(
+        applicationStatusArray.filter(status => status !== application.status)
+    )
+
+    const containerRef = useRef<HTMLDivElement | null>(null)
+
+    useEffect(() => {
+        setOtherStatus(
+            applicationStatusArray.filter(status => status !== currentStatus)
+        )
+    }, [currentStatus])
+
+    //@ts-ignore
+    const Status = new Action(context, application, setDropdown, editApplication)
+
+    // Listen for clicks outside of container to disable states
+    useListenClickOutside(activeDropdown, Status.cancel, containerRef)
+
+    function handleStatusClick(status: ApplicationStatus) {
+
+        // Save directly or change state and wait for form submission
+        if (setApplicationStatus) {
+
+            setApplicationStatus(status)
+            Status.cancel()
+
+        } else {
+            const data: EditApplicationData = {
+                status: status
+            }
+            Status.save(data)
+        }
+
+        setCurrentStatus(status)
+    }
+
+    return (
+        <div ref={containerRef} className={styles.status}>
+
+            <div className={styles.statusContainer}>
+
+                <div onClick={() => Status.toggle()}>
+                    {currentStatus}
+                </div>
+
+
+                <div
+                    className={styles.selectStatus}
+                    style={{ zIndex: activeDropdown ? 10 : -1 }}
+                >
+                    {otherStatus.map((status) => {
+                        return (
+                            <div key={status} onClick={() => handleStatusClick(status)}>
+                                {status}
+                            </div>
+                        )
+                    })}
+                </div>
+
+            </div>
+
+        </div>
+    )
+}
+
+function EditRowForm({ formId, formRef, application, context, setApplicationStatus }: {
     formId: string,
     formRef: React.MutableRefObject<HTMLFormElement | null>,
-    application: ApplicationInterface
+    application: ApplicationInterface,
+    context: ApplicationsContextInterface,
+    setApplicationStatus?: React.Dispatch<React.SetStateAction<ApplicationStatus>>
 }) {
     return (
         <form id={formId} ref={formRef} autoComplete="off" className={styles.row}>
 
-            {/* This will later be a component */}
-            <div className={styles.status}>{application.status}</div>
+            <AppStatus
+                application={application}
+                context={context}
+                setApplicationStatus={setApplicationStatus}
+            />
 
             <Input
                 style="default"

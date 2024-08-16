@@ -1,6 +1,6 @@
 // VALIDATION
 
-import { ApplicationInterface } from "@/types/applications"
+import { ApplicationInterface, ApplicationStatus } from "@/types/applications"
 
 // Max file size for JSON file (in bytes) (1 KB === 1024 bytes)
 // 1 row <= 2.14KB bytes 
@@ -37,3 +37,7 @@ export const DEFAULT_DATA: ApplicationInterface[] = [
         notes: "-"
     }
 ]
+
+// INITIAL APPLICATION STATUS
+
+export const INITIAL_STATUS: ApplicationStatus = "waiting"
