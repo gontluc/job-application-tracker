@@ -12,6 +12,8 @@ import {
     ApplicationStatus
 } from "@/types/applications"
 import { EditApplicationData } from "@/classes/action"
+import pushNotification from "./notifications"
+import { NotificationsContextInterface } from "@/types/notifications"
 
 // Check honey pot
 function checkHoneypot(honeypot: string): void {
@@ -77,7 +79,8 @@ function emailWasEditted(applications: ApplicationInterface[], newApplication: A
 // Update applications context
 function updateApplicationsContext(
     action: "add" | "status-edit" | "edit" | "delete" | "set",
-    context: ApplicationsContextInterface,
+    applicationsContext: ApplicationsContextInterface,
+    notificationsContext: NotificationsContextInterface,
     // Additional parameters
     additional: {
         data?: ApplicationInterface | ApplicationInterface[] | ApplicationStatus,
@@ -85,7 +88,7 @@ function updateApplicationsContext(
     }
 ) {
 
-    const { applications, setApplications } = context as {
+    const { applications, setApplications } = applicationsContext as {
         applications: ApplicationInterface[],
         setApplications: React.Dispatch<React.SetStateAction<ApplicationInterface[]>>
     }
@@ -98,6 +101,10 @@ function updateApplicationsContext(
             const newApplication = additional.data as ApplicationInterface
             setApplications(prevState => [...prevState, newApplication])
 
+            pushNotification(notificationsContext, {
+                text: "Added new application",
+                color: "blue"
+            })
             console.log("Added new application")
             break
 
@@ -115,6 +122,10 @@ function updateApplicationsContext(
             })
             setApplications(updatedStatusEdittedApplications)
 
+            pushNotification(notificationsContext, {
+                text: "Saved application",
+                color: "blue"
+            })
             console.log("Saved application")
             break
 
@@ -129,6 +140,10 @@ function updateApplicationsContext(
             })
             setApplications(updatedEdittedApplications)
 
+            pushNotification(notificationsContext, {
+                text: "Saved application",
+                color: "blue"
+            })
             console.log("Saved application")
             break
 
@@ -136,6 +151,10 @@ function updateApplicationsContext(
             const updatedDeletedApplications = applications.filter((application) => application.id !== id)
             setApplications(updatedDeletedApplications)
 
+            pushNotification(notificationsContext, {
+                text: "Deleted application",
+                color: "blue"
+            })
             console.log('Deleted application')
             break
 
@@ -143,6 +162,10 @@ function updateApplicationsContext(
             const data = additional.data as ApplicationInterface[]
             setApplications(data)
 
+            pushNotification(notificationsContext, {
+                text: "Updated data",
+                color: "blue"
+            })
             console.log("Updated data")
             break
 
@@ -200,10 +223,11 @@ async function processData(
 
 export function addApplication(
     formData: FormData,
-    context: ApplicationsContextInterface
+    applicationsContext: ApplicationsContextInterface,
+    notificationsContext: NotificationsContextInterface
 ): void {
 
-    const { applications } = context as {
+    const { applications } = applicationsContext as {
         applications: ApplicationInterface[]
     }
 
@@ -221,69 +245,102 @@ export function addApplication(
         .then((newApplication: ApplicationInterface) => checkRepeatedEmail(newApplication, applications))
 
         .then((newApplication: ApplicationInterface) =>
-            updateApplicationsContext("add", context, { data: newApplication })
+            updateApplicationsContext(
+                "add",
+                applicationsContext,
+                notificationsContext,
+                {
+                    data: newApplication
+                })
         )
 
-        .catch((/* error */) => {
+        .catch((error: Error) => {
             // Failed in a previous step
+            pushNotification(notificationsContext, {
+                text: error.message,
+                color: "red"
+            })
         })
 
 }
 
 export function editApplication(
-    context: ApplicationsContextInterface,
+    applicationsContext: ApplicationsContextInterface,
+    notificationsContext: NotificationsContextInterface,
     id: string,
     data: EditApplicationData
 ) {
     if (data.formData) {
 
-        const { applications } = context as {
+        const { applications } = applicationsContext as {
             applications: ApplicationInterface[]
         }
 
         processData(data, applications, true, id)
 
-        .then((unvalidatedApplication: ApplicationInterface) => validateApplication(unvalidatedApplication))
+            .then((unvalidatedApplication: ApplicationInterface) => validateApplication(unvalidatedApplication))
 
-        .then((unsanitaziedApplication: ApplicationInterface) => sanitize(unsanitaziedApplication))
+            .then((unsanitaziedApplication: ApplicationInterface) => sanitize(unsanitaziedApplication))
 
-        .then((newEdittedApplication: ApplicationInterface) => {
-            if (emailWasEditted(applications, newEdittedApplication)) {
-                return checkRepeatedEmail(newEdittedApplication, applications)
-            }
+            .then((newEdittedApplication: ApplicationInterface) => {
+                if (emailWasEditted(applications, newEdittedApplication)) {
+                    return checkRepeatedEmail(newEdittedApplication, applications)
+                }
 
-            return newEdittedApplication
-        })
+                return newEdittedApplication
+            })
 
-        .then((newEdittedApplication: ApplicationInterface) =>
-            updateApplicationsContext("edit", context, { data: newEdittedApplication, id: id })
-        )
+            .then((newEdittedApplication: ApplicationInterface) =>
+                updateApplicationsContext(
+                    "edit",
+                    applicationsContext,
+                    notificationsContext,
+                    {
+                        data: newEdittedApplication,
+                        id: id
+                    }
+                )
+            )
 
-        .catch((/* error */) => {
-            // Failed in a previous step
-        })
+            .catch((error: Error) => {
+                // Failed in a previous step
+                pushNotification(notificationsContext, {
+                    text: error.message,
+                    color: "red"
+                })
+            })
 
     } else {
         // Out-of-form application status change
-        updateApplicationsContext("status-edit", context, { data: data.status, id: id })
+        updateApplicationsContext(
+            "status-edit",
+            applicationsContext,
+            notificationsContext,
+            {
+                data: data.status,
+                id: id
+            }
+        )
     }
 }
 
 export function deleteApplication(
-    context: ApplicationsContextInterface,
+    applicationsContext: ApplicationsContextInterface,
+    notificationsContext: NotificationsContextInterface,
     id: string
 ) {
 
-    updateApplicationsContext("delete", context, { id })
+    updateApplicationsContext("delete", applicationsContext, notificationsContext, { id })
 }
 
 export function setApplicationsData(
     data: string,
-    context: ApplicationsContextInterface,
+    applicationsContext: ApplicationsContextInterface,
+    notificationsContext: NotificationsContextInterface,
     isFirstPageLoad?: boolean
 ) {
 
-    const { setApplications } = context as {
+    const { setApplications } = applicationsContext as {
         setApplications: React.Dispatch<React.SetStateAction<ApplicationInterface[]>>
     }
 
@@ -297,11 +354,15 @@ export function setApplicationsData(
 
         .then((applicationsData: ApplicationsDataInteraface) => {
             const data = applicationsData.applications
-            updateApplicationsContext("set", context, { data })
+            updateApplicationsContext("set", applicationsContext, notificationsContext, { data })
         })
 
-        .catch((/* error */) => {
+        .catch((error: Error) => {
             // Failed in a previous step
+            pushNotification(notificationsContext, {
+                text: error.message,
+                color: "red"
+            })
 
             // Set to default data if it's first page load
             if (isFirstPageLoad) {

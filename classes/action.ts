@@ -1,7 +1,8 @@
-import { 
-    ApplicationInterface, ApplicationsContextInterface, 
+import {
+    ApplicationInterface, ApplicationsContextInterface,
     ApplicationStatus
 } from "@/types/applications"
+import { NotificationsContextInterface } from "@/types/notifications"
 
 export interface EditApplicationData {
     formData?: FormData,
@@ -9,26 +10,31 @@ export interface EditApplicationData {
 }
 
 export class Action {
-    private context: ApplicationsContextInterface
+    private applicationsContext: ApplicationsContextInterface
+    private notificationsContext: NotificationsContextInterface
     private application: ApplicationInterface
     private setState: React.Dispatch<React.SetStateAction<boolean>>
     private action: (
-        context: ApplicationsContextInterface,
+        applicationsContext: ApplicationsContextInterface,
+        notificationsContext: NotificationsContextInterface,
         id: string,
         data?: EditApplicationData
     ) => void
 
     constructor(
-        context: ApplicationsContextInterface,
+        applicationsContext: ApplicationsContextInterface,
+        notificationsContext: NotificationsContextInterface,
         application: ApplicationInterface,
         setState: React.Dispatch<React.SetStateAction<boolean>>,
         action: (
-            context: ApplicationsContextInterface,
+            applicationsContext: ApplicationsContextInterface,
+            notificationsContext: NotificationsContextInterface,
             id: string,
             data?: EditApplicationData
         ) => void
     ) {
-        this.context = context
+        this.applicationsContext = applicationsContext
+        this.notificationsContext = notificationsContext
         this.application = application
         this.setState = setState
         this.action = action
@@ -46,9 +52,9 @@ export class Action {
     save = (data?: EditApplicationData) => {
         // Run applications action
         if (data) {
-            this.action(this.context, this.application.id, data)
+            this.action(this.applicationsContext, this.notificationsContext, this.application.id, data)
         } else {
-            this.action(this.context, this.application.id)
+            this.action(this.applicationsContext, this.notificationsContext, this.application.id)
         }
 
         // Disable mode

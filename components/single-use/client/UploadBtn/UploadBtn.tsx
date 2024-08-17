@@ -4,7 +4,7 @@
 import { ApplicationsContext } from "@/providers/applications/applications"
 
 // Utils
-import { setApplicationsData } from "@/utils/client/applicationsActions"
+import { setApplicationsData } from "@/utils/client/applications"
 import { MAX_FYLE_SIZE } from "@/utils/client/globals"
 
 // Types
@@ -21,18 +21,43 @@ import styles from "./UploadBtn.module.scss"
 
 // React Dropzone
 import { useDropzone } from "react-dropzone"
+import { NotificationsContextInterface } from "@/types/notifications"
+import { NotificationsContext } from "@/providers/notifications/notifications"
+import pushNotification from "@/utils/client/notifications"
 
 // File Reader API
-function readFile(file: File, context: ApplicationsContextInterface) {
+function readFile(
+    file: File, 
+    applicationsContext: ApplicationsContextInterface,
+    notificationsContext: NotificationsContextInterface,
+) {
 
     const reader = new FileReader()
 
     // Set event handlers
-    reader.onabort = () => console.log('file reading was aborted')
-    reader.onerror = () => console.log('file reading has failed')
-    reader.onload = () => {
+    reader.onabort = () => {
+        pushNotification(notificationsContext, {
+            text: "Cancelled upload",
+            color: "red"
+        })
+        console.log('file reading was aborted')
+    }
 
-        setApplicationsData(reader.result as string, context)
+    reader.onerror = () => {
+        pushNotification(notificationsContext, {
+            text: "Error while uploading",
+            color: "red"
+        })
+        console.log('file reading has failed')
+    }
+
+    reader.onload = () => {
+        pushNotification(notificationsContext, {
+            text: "Uploaded!",
+            color: "blue"
+        })
+
+        setApplicationsData(reader.result as string, applicationsContext, notificationsContext)
     }
 
     // Read file
@@ -77,7 +102,8 @@ function UploadPopUp({ isActive }: {
 
 function Dropzone() {
 
-    const context = useContext(ApplicationsContext) as ApplicationsContextInterface
+    const applicationsContext = useContext(ApplicationsContext) as ApplicationsContextInterface
+    const notificationsContext = useContext(NotificationsContext) as NotificationsContextInterface
 
     // Will be invoked regardless if the dropped files were accepted or rejected
     const onDrop = useCallback((acceptedFiles: File[], fileRejections: FileRejection[]) => {
@@ -85,6 +111,10 @@ function Dropzone() {
         // Return if file was rejected based on dropzone conditions:
         // Accepted file types, maxFiles, maxSize
         if (fileRejections.length !== 0) {
+            pushNotification(notificationsContext, {
+                text: "Conditions not met",
+                color: "red"
+            })
             console.log(uploadConditionMsg)
             return
         }
@@ -92,9 +122,13 @@ function Dropzone() {
         // Read files
         acceptedFiles.forEach((file) => {
 
+            pushNotification(notificationsContext, {
+                text: "Uploading",
+                color: "blue"
+            })
             console.log('File accepted')
 
-            readFile(file, context)
+            readFile(file, applicationsContext, notificationsContext)
         })
     }, [])
 

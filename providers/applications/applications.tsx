@@ -7,7 +7,7 @@ import sanitize from "@/utils/client/sanitization"
 import parseData from "@/utils/client/parseData"
 
 // React.js
-import { createContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 
 // Types
 import { 
@@ -15,7 +15,9 @@ import {
     ApplicationsContextInterface, 
     ApplicationsDataInteraface 
 } from "@/types/applications"
-import { setApplicationsData } from "@/utils/client/applicationsActions"
+import { setApplicationsData } from "@/utils/client/applications"
+import { NotificationsContext } from "../notifications/notifications"
+import { NotificationsContextInterface } from "@/types/notifications"
 
 // Create Context
 export const ApplicationsContext = createContext<ApplicationsContextInterface | undefined>(undefined)
@@ -29,13 +31,17 @@ export default function ApplicationsProvider({ children }: Readonly<{
 
     const [applications, setApplications] = useState<ApplicationInterface[] | null>(null)
 
+    const notificationsContext = useContext(NotificationsContext) as NotificationsContextInterface
+
     useEffect(() => {
 
         const lsDataString = localStorage.getItem(localStorageKey)
 
         // If there is data in local storage
         if (lsDataString) {
-            setApplicationsData(lsDataString, {applications, setApplications}, true)
+            setApplicationsData(
+                lsDataString, {applications, setApplications}, notificationsContext, true
+            )
 
         } else {
             // If no data in local storage then set to default data

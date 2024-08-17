@@ -18,7 +18,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 // Utils
-import { addApplication } from "@/utils/client/applicationsActions" 
+import { addApplication } from "@/utils/client/applications" 
 
 // Contexts
 import { ApplicationsContext } from "@/providers/applications/applications"
@@ -26,16 +26,19 @@ import { MAX_LENGTH_NOTES, MAX_LENGTH_SHORT_TEXT, MAX_LENGTH_WEBSITE } from "@/u
 import { ApplicationsContextInterface } from "@/types/applications"
 import Input from "@/components/reusable/client/Input/Input"
 import Honeypot from "@/components/reusable/client/Honeypot/Honeypot"
+import { NotificationsContext } from "@/providers/notifications/notifications"
+import { NotificationsContextInterface } from "@/types/notifications"
 
 export default function AddApplication() {
 
-    const context = useContext(ApplicationsContext) as ApplicationsContextInterface
+    const applicationsContext = useContext(ApplicationsContext) as ApplicationsContextInterface
+    const notificationsContext = useContext(NotificationsContext) as NotificationsContextInterface
 
     const formRef = useRef<HTMLFormElement>(null)
 
     function handleFormAction(formData: FormData) {
 
-        addApplication(formData, context)
+        addApplication(formData, applicationsContext, notificationsContext)
 
         // Reset form
         if (formRef.current) {

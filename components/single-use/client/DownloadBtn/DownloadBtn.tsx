@@ -21,6 +21,9 @@ import Image from "next/image"
 import Link from "next/link"
 import { ApplicationInterface, ApplicationsContextInterface } from "@/types/applications"
 import { ApplicationsContext } from "@/providers/applications/applications"
+import pushNotification from "@/utils/client/notifications"
+import { NotificationsContext } from "@/providers/notifications/notifications"
+import { NotificationsContextInterface } from "@/types/notifications"
 
 // Functions
 
@@ -34,9 +37,15 @@ export default function DownloadBtn() {
         applications: ApplicationInterface[]
     }
 
+    const notificationsContext = useContext(NotificationsContext) as NotificationsContextInterface
+
     function handleClick() {
         // Return if no data
         if (applications.length === 0) { 
+            pushNotification(notificationsContext, {
+                text: "No data to download, please add an application",
+                color: "red"
+            })
             console.log("No data to download, please add an application")
             return 
         }

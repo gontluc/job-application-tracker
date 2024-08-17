@@ -1,6 +1,7 @@
 // VALIDATION
 
 import { ApplicationInterface, ApplicationStatus } from "@/types/applications"
+import { SortingType } from "@/types/sort"
 
 // Max file size for JSON file (in bytes) (1 KB === 1024 bytes)
 // 1 row <= 2.14KB bytes 
@@ -41,3 +42,11 @@ export const DEFAULT_DATA: ApplicationInterface[] = [
 // INITIAL APPLICATION STATUS
 
 export const INITIAL_STATUS: ApplicationStatus = "waiting"
+
+// DEFAULT APPLICATIONS SORTING
+
+export const DEFAULT_SORTING: SortingType = "Latest"
+
+// NOTIFICATION DURATION IN MILISECONDS
+
+export const NOTIFICATION_DURATION = 3_000

@@ -19,7 +19,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 // Utils
-import { addApplication } from "@/utils/client/applicationsActions" 
+import { addApplication } from "@/utils/client/applications" 
 
 // Contexts
 import { ApplicationsContext } from "@/providers/applications/applications"

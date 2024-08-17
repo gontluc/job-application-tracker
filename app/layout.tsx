@@ -1,4 +1,5 @@
 // Providers
+import NotificationsProvider from "@/providers/notifications/notifications"
 import ApplicationsProvider from "@/providers/applications/applications"
 
 // Font
@@ -11,7 +12,7 @@ import "@/styles/globals/globals.scss"
 import type { Metadata } from "next"
 
 // Inter font
-const inter = Inter({ 
+const inter = Inter({
     weight: ["300", "400", "500", "600", "700"],
     subsets: ["latin"],
     display: "swap",
@@ -31,9 +32,11 @@ export default function RootLayout({ children }: Readonly<{
             <body className={inter.className}>
 
                 <ApplicationsProvider>
-                    {children}
+                    <NotificationsProvider>
+                        {children}
+                    </NotificationsProvider>
                 </ApplicationsProvider>
-                
+
             </body>
         </html>
     )

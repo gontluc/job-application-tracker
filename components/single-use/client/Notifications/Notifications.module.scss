@@ -1,0 +1,54 @@
+@import "/styles/globals/config";
+
+.container {
+    position: fixed;
+    top: 10px;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+
+    transition: all ease-in-out .7s;
+}
+
+.subContainer {
+    @include padding;
+
+    /* Animation initial state */
+    opacity: 0;
+    transform: translateY(-1000px);
+
+    animation: pop-notification forwards ease-in-out;
+}
+
+@keyframes pop-notification {
+    from {
+        transform: translateY(-1000px);
+        opacity: 0;
+    }
+
+    10% {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+
+    90% {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(-1000px);
+        opacity: 0;
+    }
+}
+
+/* Exports */
+:export {
+    /* Same name as NotificationColor */
+    blue: $blue;
+    red: $red;
+}
