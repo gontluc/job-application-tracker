@@ -1,33 +1,20 @@
 "use client"
 
-// Components
-
-
 // Types
+import { ApplicationsContextInterface, ApplicationStatus } from "@/types/applications"
 
+// Contexts
+import { ApplicationsContext } from "@/providers/applications/applications"
 
 // React.js
-import { useRef, useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext } from "react"
 
 // Style
 import styles from "./Header.module.scss"
 
-// Assets
-import asset from "@/public/favicon.ico"
-
-
-// Next.js
-import Image from "next/image"
-import Link from "next/link"
-import { ApplicationsContextInterface, ApplicationStatus } from "@/types/applications"
-import { ApplicationsContext } from "@/providers/applications/applications"
-
-// Functions
-
-
 export default function Header() {
 
-    const { applications, setApplications } = useContext(ApplicationsContext) as ApplicationsContextInterface
+    const { applications } = useContext(ApplicationsContext) as ApplicationsContextInterface
 
     const [stats, setStats] = useState<{ [key in ApplicationStatus]: number }>({
         waiting: 0,
@@ -36,7 +23,6 @@ export default function Header() {
     })
 
     useEffect(() => {
-
         let waiting = 0
         let rejected = 0
         let progressing = 0
@@ -65,7 +51,7 @@ export default function Header() {
 
         if (applications && applications.length !== 0) {
 
-            const total = applications?.length 
+            const total = applications?.length
 
             return ((number / total) * 100).toFixed() + "%"
         }
@@ -76,23 +62,38 @@ export default function Header() {
     return (
         <div className={styles.container}>
 
-            <div className={styles.subContainer}>
-                <div>Waiting</div>
-                <div>{stats.waiting}</div>
-                <div>{getPercentage(stats.waiting)}</div>
-            </div>
+            <Stat
+                text="Waiting"
+                number={stats.waiting}
+                percentage={getPercentage(stats.waiting)}
+            />
 
-            <div className={styles.subContainer}>
-                <div>Rejected</div>
-                <div>{stats.rejected}</div>
-                <div>{getPercentage(stats.rejected)}</div>
-            </div>
+            <Stat
+                text="Rejected"
+                number={stats.rejected}
+                percentage={getPercentage(stats.rejected)}
+            />
 
-            <div className={styles.subContainer}>
-                <div>Progressing</div>
-                <div>{stats.progressing}</div>
-                <div>{getPercentage(stats.progressing)}</div>
-            </div>
+            <Stat
+                text="Progressing"
+                number={stats.progressing}
+                percentage={getPercentage(stats.progressing)}
+            />
+
+        </div>
+    )
+}
+
+function Stat({ text, number, percentage }: {
+    text: string,
+    number: number,
+    percentage: string
+}) {
+    return (
+        <div className={styles.stat}>
+            <div>{text}</div>
+            <div>{number}</div>
+            <div>{percentage}</div>
         </div>
     )
 }

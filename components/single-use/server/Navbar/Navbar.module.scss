@@ -24,3 +24,22 @@
     display: flex;
     gap: 10px;
 }
+
+@media (max-width: 1000px) {
+    .container {
+        padding: 40px 0;
+        gap: 30px;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    
+    .logo {
+        font-size: 18px;
+        text-wrap: nowrap;
+    }
+
+    .ctas {
+        gap: 6px;
+    }
+}

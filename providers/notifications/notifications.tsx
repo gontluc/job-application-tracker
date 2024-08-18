@@ -31,8 +31,6 @@ export default function NotificationsProvider({ children }: Readonly<{
 
     useEffect(() => {
 
-        console.log(notifications)
-
         if (!notifications) { return }
 
         // Set timer to remove new notification

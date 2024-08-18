@@ -1,4 +1,4 @@
-// Contexts
+// Types
 import { NotificationColor, NotificationInterface, NotificationsContextInterface } from "@/types/notifications"
 
 export default function pushNotification(
@@ -9,8 +9,6 @@ export default function pushNotification(
     }
 
 ) {
-    const { setNotifications } = context
-
     const { text, color } = notification
 
     const id = crypto.randomUUID()
@@ -21,8 +19,10 @@ export default function pushNotification(
         color
     }
 
-    setNotifications((prevState) => [
-        ...prevState,
-        newNotification
-    ])
+    if (context?.setNotifications) {
+        context.setNotifications((prevState) => [
+            ...prevState,
+            newNotification
+        ])
+    }
 }

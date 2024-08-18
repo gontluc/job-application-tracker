@@ -1,23 +1,18 @@
 "use client"
 
-// Utils
-import { validateApplications } from "@/utils/client/validation"
-import { DEFAULT_DATA } from "@/utils/client/globals"
-import sanitize from "@/utils/client/sanitization"
-import parseData from "@/utils/client/parseData"
+// Types
+import { ApplicationInterface, ApplicationsContextInterface } from "@/types/applications"
+import { NotificationsContextInterface } from "@/types/notifications"
+
+// Contexts
+import { NotificationsContext } from "@/providers/notifications/notifications"
 
 // React.js
 import { createContext, useContext, useEffect, useState } from "react"
 
-// Types
-import { 
-    ApplicationInterface, 
-    ApplicationsContextInterface, 
-    ApplicationsDataInteraface 
-} from "@/types/applications"
+// Utils
 import { setApplicationsData } from "@/utils/client/applications"
-import { NotificationsContext } from "../notifications/notifications"
-import { NotificationsContextInterface } from "@/types/notifications"
+import { DEFAULT_DATA } from "@/utils/client/globals"
 
 // Create Context
 export const ApplicationsContext = createContext<ApplicationsContextInterface | undefined>(undefined)
@@ -35,12 +30,12 @@ export default function ApplicationsProvider({ children }: Readonly<{
 
     useEffect(() => {
 
-        const lsDataString = localStorage.getItem(localStorageKey)
+        const data = localStorage.getItem(localStorageKey)
 
         // If there is data in local storage
-        if (lsDataString) {
+        if (data) {
             setApplicationsData(
-                lsDataString, {applications, setApplications}, notificationsContext, true
+                data, {applications, setApplications}, notificationsContext, true
             )
 
         } else {

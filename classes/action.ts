@@ -1,8 +1,10 @@
+// Types
+import { NotificationsContextInterface } from "@/types/notifications"
 import {
-    ApplicationInterface, ApplicationsContextInterface,
+    ApplicationsContextInterface,
+    ApplicationInterface, 
     ApplicationStatus
 } from "@/types/applications"
-import { NotificationsContextInterface } from "@/types/notifications"
 
 export interface EditApplicationData {
     formData?: FormData,

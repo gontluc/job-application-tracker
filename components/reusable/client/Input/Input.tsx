@@ -3,28 +3,11 @@
 // Types
 import { HTMLInputTypeAttribute } from "react"
 
-
-// React.js
-import { useRef, useState, useEffect, useContext, useId } from "react"
-
 // Style
 import styles from "./Input.module.scss"
 
-// Assets
-import asset from "@/public/favicon.ico"
-
-
-// Next.js
-import Image from "next/image"
-import Link from "next/link"
-
-// Utils
-import { addApplication } from "@/utils/client/applications" 
-
-// Contexts
-import { ApplicationsContext } from "@/providers/applications/applications"
-import { MAX_LENGTH_NOTES, MAX_LENGTH_SHORT_TEXT, MAX_LENGTH_WEBSITE } from "@/utils/client/globals"
-import { ApplicationsContextInterface } from "@/types/applications"
+// React.js
+import { useId } from "react"
 
 type StylesInputType = "default" | "new application" | "honeypot"
 

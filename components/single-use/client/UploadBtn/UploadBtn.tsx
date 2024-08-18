@@ -1,35 +1,34 @@
 "use client"
 
 // Contexts
+import { NotificationsContext } from "@/providers/notifications/notifications"
 import { ApplicationsContext } from "@/providers/applications/applications"
+
+// Types
+import { NotificationsContextInterface } from "@/types/notifications"
+import { ApplicationsContextInterface } from "@/types/applications"
+import { FileRejection } from "react-dropzone"
 
 // Utils
 import { setApplicationsData } from "@/utils/client/applications"
+import pushNotification from "@/utils/client/notifications"
 import { MAX_FYLE_SIZE } from "@/utils/client/globals"
-
-// Types
-import { ApplicationsContextInterface } from "@/types/applications"
 
 // React.js
 import { useState, useCallback, useContext } from "react"
-
-// Types
-import { FileRejection } from "react-dropzone"
 
 // Style
 import styles from "./UploadBtn.module.scss"
 
 // React Dropzone
 import { useDropzone } from "react-dropzone"
-import { NotificationsContextInterface } from "@/types/notifications"
-import { NotificationsContext } from "@/providers/notifications/notifications"
-import pushNotification from "@/utils/client/notifications"
 
 // File Reader API
 function readFile(
     file: File, 
     applicationsContext: ApplicationsContextInterface,
     notificationsContext: NotificationsContextInterface,
+    disablePopUp: () => void
 ) {
 
     const reader = new FileReader()
@@ -52,11 +51,10 @@ function readFile(
     }
 
     reader.onload = () => {
-        pushNotification(notificationsContext, {
-            text: "Uploaded!",
-            color: "blue"
-        })
+        console.log('Uploaded!')
 
+        disablePopUp()
+        
         setApplicationsData(reader.result as string, applicationsContext, notificationsContext)
     }
 
@@ -71,6 +69,10 @@ export default function UploadBtn() {
 
     const [isActive, setActive] = useState(false)
 
+    function disablePopUp() {
+        setActive(false)
+    }
+
     return (
         <>
             <button 
@@ -81,26 +83,29 @@ export default function UploadBtn() {
                 Upload
             </button>
 
-            <UploadPopUp isActive={isActive} />
+            <UploadPopUp isActive={isActive} disablePopUp={disablePopUp} />
         </>
     )
 }
 
-function UploadPopUp({ isActive }: {
-    isActive: boolean
+function UploadPopUp({ isActive, disablePopUp }: {
+    isActive: boolean,
+    disablePopUp: () => void
 }) {
     return (
         isActive
             ?
             <div className={styles.uploadPopUp}>
-                <Dropzone />
+                <Dropzone disablePopUp={disablePopUp} />
             </div>
             :
             null
     )
 }
 
-function Dropzone() {
+function Dropzone({ disablePopUp }: {
+    disablePopUp: () => void
+}) {
 
     const applicationsContext = useContext(ApplicationsContext) as ApplicationsContextInterface
     const notificationsContext = useContext(NotificationsContext) as NotificationsContextInterface
@@ -121,14 +126,9 @@ function Dropzone() {
 
         // Read files
         acceptedFiles.forEach((file) => {
+            console.log('File accepted. Uploading...')
 
-            pushNotification(notificationsContext, {
-                text: "Uploading",
-                color: "blue"
-            })
-            console.log('File accepted')
-
-            readFile(file, applicationsContext, notificationsContext)
+            readFile(file, applicationsContext, notificationsContext, disablePopUp)
         })
     }, [])
 

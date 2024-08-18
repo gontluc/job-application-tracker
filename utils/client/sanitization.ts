@@ -4,8 +4,6 @@ import { ApplicationInterface, ApplicationsDataInteraface } from "@/types/applic
 // DOM Purify
 import DOMPurify from "dompurify"
 
-// Functions
-
 type SanitizeDataType = 
     ApplicationsDataInteraface 
     | ApplicationInterface 
@@ -51,6 +49,6 @@ export default async function sanitize<T extends SanitizeType>(data: T): Promise
 
         console.log('Error during sanitization')
 
-        throw new Error()
+        throw new Error("Error during sanitization")
     }
 }

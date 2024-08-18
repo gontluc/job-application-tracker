@@ -1,7 +1,7 @@
 // React.js
 import { RefObject, useEffect, useRef } from 'react'
 
-// Will call the callback if a click happens outside of the container (containerRef)
+// Calls the callback if a click happens outside of the container (containerRef)
 export default function useListenClickOutside(
     containerActiveState: boolean,
     callback: () => void,

@@ -3,11 +3,11 @@
 .container {
     display: flex;
     flex-direction: column;
-    gap: 100px;
+    gap: 60px;
 }
 
-@media (max-width: 1000px) {
+/* @media (max-width: 1000px) {
     .container {
         gap: 60px;
     }
-}
+} */

@@ -23,7 +23,7 @@ function validate<T extends ValidateType>(data: T, schema: ZodObject<any>): T {
 
         console.log('Invalid')
         
-        throw new Error()
+        throw new Error("Invalid")
     }
 }
 

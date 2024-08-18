@@ -1,35 +1,21 @@
 "use client"
 
-// Components
-
+// Contexts
+import { NotificationsContext } from "@/providers/notifications/notifications"
+import { ApplicationsContext } from "@/providers/applications/applications"
 
 // Types
+import { NotificationsContextInterface } from "@/types/notifications"
+import { ApplicationInterface } from "@/types/applications"
 
-
-// React.js
-import { useRef, useState, useEffect, useContext } from "react"
+// Utils
+import pushNotification from "@/utils/client/notifications"
 
 // Style
 import styles from "./DownloadBtn.module.scss"
 
-// Assets
-import asset from "@/public/favicon.ico"
-
-
-// Next.js
-import Image from "next/image"
-import Link from "next/link"
-import { ApplicationInterface, ApplicationsContextInterface } from "@/types/applications"
-import { ApplicationsContext } from "@/providers/applications/applications"
-import pushNotification from "@/utils/client/notifications"
-import { NotificationsContext } from "@/providers/notifications/notifications"
-import { NotificationsContextInterface } from "@/types/notifications"
-
-// Functions
-
-
-// Constants
-
+// React.js
+import { useContext } from "react"
 
 export default function DownloadBtn() {
 

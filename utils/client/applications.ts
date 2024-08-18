@@ -1,26 +1,30 @@
 // Utils
-import { validateApplication, validateApplications } from "@/utils/client/validation"
 import { DEFAULT_DATA, INITIAL_STATUS, MAX_APPLICATIONS } from "@/utils/client/globals"
+import { validateApplication, validateApplications } from "@/utils/client/validation"
 import sanitize from "@/utils/client/sanitization"
 import parseData from "@/utils/client/parseData"
 
 // Types
+import { NotificationsContextInterface } from "@/types/notifications"
 import {
     ApplicationInterface,
     ApplicationsContextInterface,
     ApplicationsDataInteraface,
     ApplicationStatus
 } from "@/types/applications"
+
+// Utils
+import pushNotification from "@/utils/client/notifications"
+
+// Classes
 import { EditApplicationData } from "@/classes/action"
-import pushNotification from "./notifications"
-import { NotificationsContextInterface } from "@/types/notifications"
 
 // Check honey pot
 function checkHoneypot(honeypot: string): void {
 
     if (honeypot) {
         console.log('Not human activity detected')
-        throw new Error()
+        throw new Error("Not human activity detected")
     }
 }
 
@@ -29,7 +33,7 @@ function checkMaxApplications(applications: ApplicationInterface[]): void {
 
     if (applications.length >= MAX_APPLICATIONS) {
         console.log('Reached max number of applications')
-        throw new Error()
+        throw new Error("Reached max number of applications")
     }
 }
 
@@ -43,7 +47,7 @@ function checkRepeatedEmail(
 
     if (emails.includes(newApplication.email)) {
         console.log("Email already exists")
-        throw new Error()
+        throw new Error("Email already exists")
     }
 
     return newApplication
@@ -58,7 +62,7 @@ function checkAllEmails(applicationsData: ApplicationsDataInteraface): Applicati
     applicationsData.applications.forEach((app) => {
 
         if (emails.includes(app.email)) {
-            throw new Error()
+            throw new Error("Found repeated emails. Invalid data")
         }
 
         emails.push(app.email)
@@ -221,11 +225,11 @@ async function processData(
     return newApplication
 }
 
-export function addApplication(
+export async function addApplication(
     formData: FormData,
     applicationsContext: ApplicationsContextInterface,
     notificationsContext: NotificationsContextInterface
-): void {
+): Promise<boolean> {
 
     const { applications } = applicationsContext as {
         applications: ApplicationInterface[]
@@ -236,7 +240,7 @@ export function addApplication(
         status: INITIAL_STATUS
     }
 
-    processData(data, applications)
+    const isSuccessful = await processData(data, applications)
 
         .then((unvalidatedApplication: ApplicationInterface) => validateApplication(unvalidatedApplication))
 
@@ -244,15 +248,18 @@ export function addApplication(
 
         .then((newApplication: ApplicationInterface) => checkRepeatedEmail(newApplication, applications))
 
-        .then((newApplication: ApplicationInterface) =>
+        .then((newApplication: ApplicationInterface) => {
             updateApplicationsContext(
                 "add",
                 applicationsContext,
                 notificationsContext,
                 {
                     data: newApplication
-                })
-        )
+                }
+            )
+
+            return true
+        })
 
         .catch((error: Error) => {
             // Failed in a previous step
@@ -260,8 +267,11 @@ export function addApplication(
                 text: error.message,
                 color: "red"
             })
-        })
 
+            return false
+        })
+        
+    return isSuccessful
 }
 
 export function editApplication(

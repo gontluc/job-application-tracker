@@ -4,7 +4,7 @@
 import { MAX_LENGTH_SHORT_TEXT } from "@/utils/client/globals"
 
 // Components
-import Input from "../Input/Input"
+import Input from "@/components/reusable/client/Input/Input"
 
 export default function Honeypot() {
     return (

@@ -4,6 +4,6 @@ export default async function parseData(dataString: string) {
 
     } catch (error) {
         console.log("Error parsing JSON")
-        throw new Error()
+        throw new Error("Error parsing JSON")
     }
 }

@@ -43,6 +43,10 @@
         transition: none;
         transform: scale(.85);
     }
+
+    @media (max-width: 1000px) {
+        font-size: 14px;
+    }
 }
 
 @mixin blueBtn($borderRadius: $defaultBorderRadius) {

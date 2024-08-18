@@ -1,5 +1,6 @@
-import { ApplicationInterface, ApplicationStatus } from "@/types/applications";
-import { SortingType } from "@/types/sort";
+// Types
+import { ApplicationInterface, ApplicationStatus } from "@/types/applications"
+import { SortingType } from "@/types/sort"
 
 // Status
 

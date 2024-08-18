@@ -14,11 +14,8 @@ export default function Navbar() {
             </h1>
 
             <div className={styles.ctas}>
-
                 <UploadBtn />
-
                 <DownloadBtn />
-
             </div>
 
         </div>

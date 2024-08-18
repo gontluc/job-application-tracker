@@ -1,41 +1,45 @@
 "use client"
 
-// Components
+// Utils
+import { editApplication, deleteApplication } from "@/utils/client/applications"
+import pushNotification from "@/utils/client/notifications"
+import { sortingFunctions } from "@/utils/client/sort"
+import { 
+    DEFAULT_SORTING, 
+    MAX_LENGTH_NOTES, 
+    MAX_LENGTH_SHORT_TEXT, 
+    MAX_LENGTH_WEBSITE 
+} from "@/utils/client/globals"
 
-
-// Types
-
+// Contexts
+import { NotificationsContext } from "@/providers/notifications/notifications"
+import { ApplicationsContext } from "@/providers/applications/applications"
 
 // React.js
-import React, { useRef, useState, useEffect, useContext, useId, forwardRef } from "react"
+import React, { useRef, useState, useEffect, useContext, useId } from "react"
+
+// Custom Hooks
+import useListenClickOutside from "@/custom-hooks/useListenClickOutside"
+
+// Components
+import Honeypot from "@/components/reusable/client/Honeypot/Honeypot"
+import Input from "@/components/reusable/client/Input/Input"
+
+// Types
+import { NotificationsContextInterface } from "@/types/notifications"
+import { SortingType } from "@/types/sort"
+import { 
+    ApplicationsContextInterface, 
+    applicationStatusArray, 
+    ApplicationInterface, 
+    ApplicationStatus
+} from "@/types/applications"
+
+// Classes
+import { Action, EditApplicationData } from "@/classes/action"
 
 // Style
 import styles from "./Applications.module.scss"
-
-// Assets
-import asset from "@/public/favicon.ico"
-
-
-// Next.js
-import Image from "next/image"
-import Link from "next/link"
-import { ApplicationsContext } from "@/providers/applications/applications"
-import { ApplicationInterface, ApplicationsContextInterface, ApplicationStatus, applicationStatusArray } from "@/types/applications"
-import { editApplication, deleteApplication } from "@/utils/client/applications"
-import useListenClickOutside from "@/custom-hooks/useListenClickOutside"
-import Input from "@/components/reusable/client/Input/Input"
-import { DEFAULT_SORTING, MAX_LENGTH_NOTES, MAX_LENGTH_SHORT_TEXT, MAX_LENGTH_WEBSITE } from "@/utils/client/globals"
-import { Action, EditApplicationData } from "@/classes/action"
-import Honeypot from "@/components/reusable/client/Honeypot/Honeypot"
-import { SortingType } from "@/types/sort"
-import { sortingFunctions } from "@/utils/client/sort"
-import { NotificationsContextInterface } from "@/types/notifications"
-import { NotificationsContext } from "@/providers/notifications/notifications"
-import pushNotification from "@/utils/client/notifications"
-// Functions
-
-
-// Constants
 
 export default function Applications() {
 
@@ -179,7 +183,7 @@ function Title({ name, styles, sorting, setSorting, titleSortings }: {
 
 function ClipboardEmails() {
 
-    const { applications, setApplications } = useContext(ApplicationsContext) as ApplicationsContextInterface
+    const { applications } = useContext(ApplicationsContext) as ApplicationsContextInterface
     const notificationsContext = useContext(NotificationsContext) as NotificationsContextInterface
 
     function handleCopyEmailsClick() {
@@ -197,7 +201,7 @@ function ClipboardEmails() {
                 })
                 console.log("Emails copied to clipboard")
             })
-            .catch((/* error */) => {
+            .catch(() => {
                 pushNotification(notificationsContext, {
                     text: "Failed to copy emails",
                     color: "red"

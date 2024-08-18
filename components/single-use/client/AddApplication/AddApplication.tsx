@@ -1,33 +1,26 @@
 "use client"
 
-// Types
-import { HTMLInputTypeAttribute } from "react"
+// Utils
+import { MAX_LENGTH_NOTES, MAX_LENGTH_SHORT_TEXT, MAX_LENGTH_WEBSITE } from "@/utils/client/globals"
+import { addApplication } from "@/utils/client/applications"
 
-// React.js
-import { useRef, useState, useEffect, useContext, useId } from "react"
+// Contexts
+import { NotificationsContext } from "@/providers/notifications/notifications"
+import { ApplicationsContext } from "@/providers/applications/applications"
+
+// Components
+import Honeypot from "@/components/reusable/client/Honeypot/Honeypot"
+import Input from "@/components/reusable/client/Input/Input"
+
+// Types
+import { NotificationsContextInterface } from "@/types/notifications"
+import { ApplicationsContextInterface } from "@/types/applications"
 
 // Style
 import styles from "./AddApplication.module.scss"
 
-// Assets
-import asset from "@/public/favicon.ico"
-
-
-// Next.js
-import Image from "next/image"
-import Link from "next/link"
-
-// Utils
-import { addApplication } from "@/utils/client/applications" 
-
-// Contexts
-import { ApplicationsContext } from "@/providers/applications/applications"
-import { MAX_LENGTH_NOTES, MAX_LENGTH_SHORT_TEXT, MAX_LENGTH_WEBSITE } from "@/utils/client/globals"
-import { ApplicationsContextInterface } from "@/types/applications"
-import Input from "@/components/reusable/client/Input/Input"
-import Honeypot from "@/components/reusable/client/Honeypot/Honeypot"
-import { NotificationsContext } from "@/providers/notifications/notifications"
-import { NotificationsContextInterface } from "@/types/notifications"
+// React.js
+import { useRef, useContext } from "react"
 
 export default function AddApplication() {
 
@@ -39,11 +32,13 @@ export default function AddApplication() {
     function handleFormAction(formData: FormData) {
 
         addApplication(formData, applicationsContext, notificationsContext)
-
-        // Reset form
-        if (formRef.current) {
-            formRef.current.reset()
-        }
+        
+            .then((isSuccessful) => {
+                // Reset form
+                if (formRef.current && isSuccessful) {
+                    formRef.current.reset()
+                }
+            })
     }
 
     return (
@@ -51,51 +46,51 @@ export default function AddApplication() {
 
             <form ref={formRef} action={handleFormAction} autoComplete="off">
 
-                <Input 
+                <Input
                     style="new application"
-                    type="text" 
-                    name="company" 
-                    text="Company" 
+                    type="text"
+                    name="company"
+                    text="Company"
                     maxLength={MAX_LENGTH_SHORT_TEXT}
                 />
 
-                <Input 
+                <Input
                     style="new application"
-                    type="text" 
-                    name="location" 
+                    type="text"
+                    name="location"
                     text="Location"
                     maxLength={MAX_LENGTH_SHORT_TEXT}
                 />
 
-                <Input 
+                <Input
                     style="new application"
-                    type="email" 
-                    name="email" 
+                    type="email"
+                    name="email"
                     text="Email"
                     maxLength={MAX_LENGTH_SHORT_TEXT}
                 />
 
-                <Input 
+                <Input
                     style="new application"
-                    type="url" 
-                    name="website" 
-                    text="Website" 
-                    required={false} 
+                    type="url"
+                    name="website"
+                    text="Website"
+                    required={false}
                     maxLength={MAX_LENGTH_WEBSITE}
                 />
 
-                <Input 
+                <Input
                     style="new application"
-                    type="text" 
-                    name="notes" 
-                    text="Notes" 
-                    required={false} 
+                    type="text"
+                    name="notes"
+                    text="Notes"
+                    required={false}
                     maxLength={MAX_LENGTH_NOTES}
                 />
 
                 <Honeypot />
 
-                <button 
+                <button
                     type="submit"
                     className={styles.btn}
                     aria-label="Click to add new job application"

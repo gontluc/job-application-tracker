@@ -1,7 +1,8 @@
-// VALIDATION
-
+// Types
 import { ApplicationInterface, ApplicationStatus } from "@/types/applications"
 import { SortingType } from "@/types/sort"
+
+// VALIDATION
 
 // Max file size for JSON file (in bytes) (1 KB === 1024 bytes)
 // 1 row <= 2.14KB bytes 
