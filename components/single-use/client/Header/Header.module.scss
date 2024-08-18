@@ -1,12 +1,93 @@
 @import "/styles/globals/config";
 
 .container {
-    width: 100%;
+    @include sectionMargin;
+
     display: flex;
     justify-content: space-around;
+    margin-top: 40px;
+    margin-bottom: 80px;
 }
 
 .stat {
-    display: flex;
+    @include flexCenter;
     flex-direction: column;
+}
+
+.pill {
+    width: 60px;
+    height: 14px;
+    border-radius: 1000px;
+}
+
+.number {
+    font-size: 70px;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+.text {
+    text-transform: capitalize;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+.line {
+    width: 130px;
+    height: 2px;
+    border-radius: 1000px;
+    background-color: $darkGrey;
+    margin: 12px 0;
+}
+
+.percentage {
+    font-size: 18px;
+}
+
+.bottomText {
+    font-size: 14px;
+}
+
+:export {
+    blue: $blue;
+    green: $green;
+    red: $red;
+}
+
+@media (max-width: 1000px) {
+    .container {
+        margin-top: 20px;
+        margin-bottom: 60px;
+    }
+    
+    .pill {
+        width: 45px;
+        height: 11px;
+    }
+    
+    .number {
+        font-size: 45px;
+        margin-top: 0px;
+    }
+    
+    .text {
+        font-size: 15px;
+        margin-top: 0px;
+    }
+    
+    .line {
+        width: 80px;
+        margin: 8px 0;
+    }
+    
+    .percentage {
+        font-size: 12px;
+    }
+    
+    .bottomText {
+        font-size: 10px;
+        text-align: center;
+    }
 }

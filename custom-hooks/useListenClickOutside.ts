@@ -5,12 +5,14 @@ import { RefObject, useEffect, useRef } from 'react'
 export default function useListenClickOutside(
     containerActiveState: boolean,
     callback: () => void,
-    containerRef: RefObject<HTMLElement | null>,
+    containerRef: RefObject<HTMLElement | null>
 ) {
     const initialRender = useRef(true)
 
     function closeContainer(event: Event) {
+
         const clickedInside = containerRef.current?.contains(event.target as Node) || false
+
         // If clicked outside of the container
         if (!clickedInside){
             callback()

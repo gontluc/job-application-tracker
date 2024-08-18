@@ -63,19 +63,19 @@ export default function Header() {
         <div className={styles.container}>
 
             <Stat
-                text="Waiting"
+                text="waiting"
                 number={stats.waiting}
                 percentage={getPercentage(stats.waiting)}
             />
 
             <Stat
-                text="Rejected"
+                text="rejected"
                 number={stats.rejected}
                 percentage={getPercentage(stats.rejected)}
             />
 
             <Stat
-                text="Progressing"
+                text="progressing"
                 number={stats.progressing}
                 percentage={getPercentage(stats.progressing)}
             />
@@ -85,15 +85,39 @@ export default function Header() {
 }
 
 function Stat({ text, number, percentage }: {
-    text: string,
+    text: ApplicationStatus,
     number: number,
     percentage: string
 }) {
+
+    function getBgColor(status: ApplicationStatus) {
+        switch (status) {
+            case "waiting":
+                return styles.blue
+            case "rejected":
+                return styles.red
+            case "progressing":
+                return styles.green
+            default:
+                // Unreach
+        }
+    }
+
     return (
         <div className={styles.stat}>
-            <div>{text}</div>
-            <div>{number}</div>
-            <div>{percentage}</div>
+
+            <div className={styles.pill} style={{ backgroundColor: getBgColor(text) }}></div>
+            
+            <div className={styles.number}>{number}</div>
+
+            <div className={styles.text}>{text}</div>
+
+            <div className={styles.line}></div>
+
+            <div className={styles.percentage}>{percentage}</div>
+
+            <div className={styles.bottomText}>of total applications</div>
+            
         </div>
     )
 }
