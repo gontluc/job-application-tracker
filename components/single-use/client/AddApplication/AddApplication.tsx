@@ -32,7 +32,7 @@ export default function AddApplication() {
     function handleFormAction(formData: FormData) {
 
         addApplication(formData, applicationsContext, notificationsContext)
-        
+
             .then((isSuccessful) => {
                 // Reset form
                 if (formRef.current && isSuccessful) {
@@ -46,49 +46,53 @@ export default function AddApplication() {
 
             <form ref={formRef} action={handleFormAction} autoComplete="off">
 
-                <Input
-                    style="new application"
-                    type="text"
-                    name="company"
-                    text="Company"
-                    maxLength={MAX_LENGTH_SHORT_TEXT}
-                />
+                <div className={styles.inputs}>
 
-                <Input
-                    style="new application"
-                    type="text"
-                    name="location"
-                    text="Location"
-                    maxLength={MAX_LENGTH_SHORT_TEXT}
-                />
+                    <Input
+                        style="new application"
+                        type="text"
+                        name="company"
+                        text="Company"
+                        maxLength={MAX_LENGTH_SHORT_TEXT}
+                    />
 
-                <Input
-                    style="new application"
-                    type="email"
-                    name="email"
-                    text="Email"
-                    maxLength={MAX_LENGTH_SHORT_TEXT}
-                />
+                    <Input
+                        style="new application"
+                        type="text"
+                        name="location"
+                        text="Location"
+                        maxLength={MAX_LENGTH_SHORT_TEXT}
+                    />
 
-                <Input
-                    style="new application"
-                    type="url"
-                    name="website"
-                    text="Website"
-                    required={false}
-                    maxLength={MAX_LENGTH_WEBSITE}
-                />
+                    <Input
+                        style="new application"
+                        type="email"
+                        name="email"
+                        text="Email"
+                        maxLength={MAX_LENGTH_SHORT_TEXT}
+                    />
 
-                <Input
-                    style="new application"
-                    type="text"
-                    name="notes"
-                    text="Notes"
-                    required={false}
-                    maxLength={MAX_LENGTH_NOTES}
-                />
+                    <Input
+                        style="new application"
+                        type="url"
+                        name="website"
+                        text="Website"
+                        required={false}
+                        maxLength={MAX_LENGTH_WEBSITE}
+                    />
 
-                <Honeypot />
+                    <Input
+                        style="new application"
+                        type="text"
+                        name="notes"
+                        text="Notes"
+                        required={false}
+                        maxLength={MAX_LENGTH_NOTES}
+                    />
+
+                    <Honeypot />
+
+                </div>
 
                 <button
                     type="submit"

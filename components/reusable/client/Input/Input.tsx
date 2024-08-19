@@ -12,7 +12,7 @@ import { useId } from "react"
 type StylesInputType = "default" | "new application" | "honeypot"
 
 export default function Input({ 
-    style="default", type, name, text, required=true, maxLength, value=undefined
+    style="default", type, name, text, required=true, maxLength, value
 }: {
     style: StylesInputType
     type: HTMLInputTypeAttribute,
@@ -41,7 +41,7 @@ export default function Input({
 
     return (
         <div className={containerClassName}>
-            <label htmlFor={id}>{text}</label>{/* this is display none?, ask gpt if accessibility still works, if not then change Upload component css too */}
+            <label htmlFor={id}>{text}</label>
             <input 
                 type={type} 
                 id={id}

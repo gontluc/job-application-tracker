@@ -4,11 +4,11 @@
 import { editApplication, deleteApplication } from "@/utils/client/applications"
 import pushNotification from "@/utils/client/notifications"
 import { sortingFunctions } from "@/utils/client/sort"
-import { 
-    DEFAULT_SORTING, 
-    MAX_LENGTH_NOTES, 
-    MAX_LENGTH_SHORT_TEXT, 
-    MAX_LENGTH_WEBSITE 
+import {
+    DEFAULT_SORTING,
+    MAX_LENGTH_NOTES,
+    MAX_LENGTH_SHORT_TEXT,
+    MAX_LENGTH_WEBSITE
 } from "@/utils/client/globals"
 
 // Contexts
@@ -28,18 +28,24 @@ import Input from "@/components/reusable/client/Input/Input"
 // Types
 import { NotificationsContextInterface } from "@/types/notifications"
 import { SortingType } from "@/types/sort"
-import { 
-    ApplicationsContextInterface, 
-    applicationStatusArray, 
-    ApplicationInterface, 
+import {
+    ApplicationsContextInterface,
+    applicationStatusArray,
+    ApplicationInterface,
     ApplicationStatus
 } from "@/types/applications"
 
 // Classes
 import { Action, EditApplicationData } from "@/classes/action"
 
+// Assets
+import arrowIcon from "@/public/icons/arrow.png"
+
 // Style
 import styles from "./Applications.module.scss"
+
+// Next.js
+import Image from "next/image"
 
 export default function Applications() {
 
@@ -58,7 +64,7 @@ export default function Applications() {
                 <div className={styles.titles}>
                     <Title
                         name={"Status"}
-                        styles={styles.status}
+                        style={styles.status}
                         sorting={sorting}
                         setSorting={setSorting}
                         titleSortings={[
@@ -67,7 +73,7 @@ export default function Applications() {
                     />
                     <Title
                         name={"Company"}
-                        styles={styles.company}
+                        style={styles.company}
                         sorting={sorting}
                         setSorting={setSorting}
                         titleSortings={[
@@ -77,7 +83,7 @@ export default function Applications() {
                     />
                     <Title
                         name={"Location"}
-                        styles={styles.location}
+                        style={styles.location}
                         sorting={sorting}
                         setSorting={setSorting}
                         titleSortings={[
@@ -87,7 +93,7 @@ export default function Applications() {
                     />
                     <Title
                         name={"Email"}
-                        styles={styles.email}
+                        style={styles.email}
                         sorting={sorting}
                         setSorting={setSorting}
                         titleSortings={[
@@ -97,7 +103,7 @@ export default function Applications() {
                     />
                     <Title
                         name={"Date"}
-                        styles={styles.date}
+                        style={styles.date}
                         sorting={sorting}
                         setSorting={setSorting}
                         titleSortings={[
@@ -137,15 +143,15 @@ function OrderBy({ sorting }: {
 }) {
     return (
         <div className={styles.orderBy}>
-            <p>Order by:</p>
+            <p>Ordered by</p>
             <div className={styles.orderByPill}>{sorting}</div>
         </div>
     )
 }
 
-function Title({ name, styles, sorting, setSorting, titleSortings }: {
+function Title({ name, style, sorting, setSorting, titleSortings }: {
     name: string,
-    styles: string,
+    style: string,
     sorting: SortingType,
     setSorting: React.Dispatch<React.SetStateAction<SortingType>>,
     titleSortings: SortingType[]
@@ -173,10 +179,18 @@ function Title({ name, styles, sorting, setSorting, titleSortings }: {
 
     return (
         <div
-            className={styles}
+            className={style}
             onClick={handleClick}
         >
             {name}
+
+            <Image
+                src={arrowIcon}
+                alt="Arrow icon: Click to sort"
+                className={styles.arrowImg}
+                priority={true}
+                quality={100}
+            />
         </div>
     )
 }

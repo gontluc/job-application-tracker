@@ -1,9 +1,62 @@
 @import "/styles/globals/config";
 
 .container {
-    
+    width: 100%;
+    padding: 0px 30px;
+    padding-top: calc(10px + $scrollbarHeight);
+    padding-bottom: 10px;
+    background-color: $grey;
+    border-radius: 1000px;
+
+    form {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+    }
+}
+
+.inputs {
+    @include scroolbar;
+    display: flex;
+    gap: 15px;
+    padding: 10px 0px;
+    overflow-x: scroll;
+    border-radius: 1000px;
 }
 
 .btn {
     @include blueBtn($roundBorderRadius);
+
+    text-wrap: nowrap;
+    font-size: 22px;
+    font-weight: 500;
+    padding: .6em 1.1em;
+}
+
+@media (max-width: 1000px) {
+    .container {
+        padding: 30px 5vw;
+        border-radius: 30px;
+    
+        form {
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 25px;
+        }
+    }
+    
+    .inputs {
+        overflow-x: hidden;
+        border-radius: 0px;
+        gap: 25px;
+        padding: 10px 0px;
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn {
+        font-size: 16px;
+        width: 100%;
+    }
 }

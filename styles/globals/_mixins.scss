@@ -18,11 +18,11 @@
 }
 
 @mixin padding {
-    padding: .3em .7em;  
+    padding: .3em .7em;
 }
 
 @mixin letterSpacing {
-    letter-spacing: .05em; 
+    letter-spacing: .05em;
 }
 
 @mixin whiteBlueContainer($borderRadius: $defaultBorderRadius) {
@@ -34,7 +34,7 @@
 @mixin ctaBtn {
     @include avoidSelection;
     @include padding;
-    
+
     font-weight: 500;
     font-size: 18px;
     cursor: pointer;
@@ -67,9 +67,53 @@
     }
 }
 
-@mixin tableElement {
-    min-width: 200px;
-    width: 200px;
+@mixin column($width) {
+    min-width: $width;
+    width: $width;
     overflow: hidden;
     text-wrap: nowrap;
+}
+
+@mixin scroolbar {
+
+    /* Firefox */
+
+    /* Scrollbar width: 'auto' or 'thin' */
+    scrollbar-width: thin;
+
+    /* Scrollbar colors: thumb color and track color */
+    scrollbar-color: $darkerGrey transaprent;
+
+    /* WebKit Browsers (Chrome, Safari, Edge) */
+    @supports selector(::-webkit-scrollbar) {
+
+        scrollbar-width: initial;
+        scrollbar-color: initial;
+
+        &::-webkit-scrollbar {
+            height: $scrollbarHeight;
+            /* Height of the scrollbar */
+        }
+    
+        &::-webkit-scrollbar-track {
+            background: transparent;
+            /* Background of the scrollbar */
+        }
+    
+        /* Handle (scroll thumb) */
+        &::-webkit-scrollbar-thumb {
+            background: $darkGrey;
+            border-radius: 1000px;
+        }
+    
+        /* Handle on hover */
+        &::-webkit-scrollbar-thumb:hover {
+            background: $darkerGrey;
+        }
+    
+        /* Scrollbar arrows */
+        &::-webkit-scrollbar-button {
+            display: none;
+        }
+    }
 }

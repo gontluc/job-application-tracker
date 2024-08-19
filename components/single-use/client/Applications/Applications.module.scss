@@ -1,47 +1,134 @@
 @import "/styles/globals/config";
 
+$tableGap: 10px;
+$rowPadding: 25px 40px;
+$rowGap: 40px;
+
+@mixin clickableTitle {
+    &:hover {
+        cursor: pointer;
+    }
+
+    &:active {
+        transform: scale(.9);
+    }
+}
+
 .container {
-    width: 90%;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
 }
 
 .orderBy {
+    @include avoidSelection;
     display: flex;
     align-self: flex-end;
     align-items: center;
     gap: 10px;
-    gap: 10px;
+    margin-right: 30px;
+
+    p {
+        color: $blue;
+        font-size: 13px;
+        font-weight: 600;
+    }
+}
+
+.orderByPill {
+    @include whiteBlueContainer;
+    padding: .22em .7em;
+    border-radius: 1000px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 2px;
 }
 
 .applicationsContainer {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 20px;
     height: 90vh;
     overflow: auto;
-    padding: 20px;
-    border: 2px solid #ccc;
     position: relative;
-}
-
-.subContainer {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    border-radius: 40px;
+    background-color: $grey;
+    gap: $tableGap;
 }
 
 .titles {
+    padding: $rowPadding;
     position: sticky;
     z-index: 20;
     top: 0;
     left: auto;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: $rowGap;
+    background-color: $grey;
+
+    div {
+        @include avoidSelection;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .arrowImg {
+        max-width: 18px;
+        height: auto;
+    }
+}
+
+.status {
+    @include column(100px);
+    @include clickableTitle;
+    overflow: visible;
+}
+
+.company {
+    @include column(200px);
+    @include clickableTitle;
+
+}
+
+.location {
+    @include column(200px);
+    @include clickableTitle;
+
+}
+
+.email {
+    @include column(200px);
+    @include clickableTitle;
+
+}
+
+.date {
+    @include column(200px);
+    @include clickableTitle;
+
+}
+
+.website {
+    @include column(200px);
+
+}
+
+.notes {
+    @include column(200px);
+
+    width: auto;
+}
+
+.subContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: $tableGap;
 }
 
 .copyEmails {
@@ -53,20 +140,15 @@
 }
 
 .row {
+    padding: $rowPadding;
     width: fit-content;
     display: flex;
-    gap: 20px;
+    gap: $rowGap;
     position: relative;
-    padding: 10px 0;
 
     &:hover {
         background-color: rgb(222, 222, 243)
     }
-}
-
-.status {
-    @include tableElement;
-    overflow: visible;
 }
 
 .statusContainer {
@@ -85,31 +167,6 @@
     gap: 10px;
     width: 100%;
     height: 100px
-}
-
-.company {
-    @include tableElement;
-}
-
-.location {
-    @include tableElement;
-}
-
-.email {
-    @include tableElement;
-}
-
-.date {
-    @include tableElement;
-}
-
-.website {
-    @include tableElement;
-}
-
-.notes {
-    @include tableElement;
-    width: auto;
 }
 
 .actionsContainer {

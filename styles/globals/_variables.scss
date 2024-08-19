@@ -10,6 +10,7 @@ $fontMono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
 $white: #FFFFFF;
 $grey: #FAFAFA;
 $darkGrey: #D9D9D9;
+$darkerGrey: #c5c3c3;
 $black: #333;
 
 $blue: #3F6EE3;
@@ -25,3 +26,7 @@ $boxShadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
 $defaultBorderRadius: .3em;
 $roundBorderRadius: 10rem;
+
+/* Scrollbar width */
+
+$scrollbarHeight: 6px;

@@ -40,6 +40,18 @@ button {
     outline: none;
     font: inherit;
     unicode-bidi: isolate;
+    height: fit-content;
+    width: fit-content;
+    color: inherit;
+    box-sizing: border-box;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+input {
+    color: inherit;
 
     &:focus {
         outline: none;
