@@ -62,7 +62,7 @@ function readFile(
     }
 
     reader.onload = () => {
-        console.log('Uploaded!')
+        console.log('Uploaded')
 
         disablePopUp()
 
@@ -136,7 +136,7 @@ function Dropzone({ disablePopUp, containerRef }: {
         // Accepted file types, maxFiles, maxSize
         if (fileRejections.length !== 0) {
             pushNotification(notificationsContext, {
-                text: "Conditions not met",
+                text: uploadConditionMsg,
                 color: "red"
             })
             console.log(uploadConditionMsg)

@@ -1,7 +1,9 @@
+// Assets
+import githubIcon from "@/public/icons/github.png"
+import lucasIcon from "@/public/icons/lucas.png"
+
 // Style
 import styles from "./Footer.module.scss"
-
-// Assets
 
 // Next.js
 import Image from "next/image"
@@ -10,7 +12,34 @@ import Link from "next/link"
 export default function Footer() {
     return (
         <div className={styles.container}>
-            Footer
+
+
+            <Link href={"/"} className={styles.lucas}>
+                <Image
+                    src={lucasIcon}
+                    alt="Logo: ..."
+                    className={styles.lucasImg}
+                    quality={100}
+                />
+                <p>Lucas Gontijo</p>
+            </Link>
+
+            <div className={styles.github}>
+                <Link href={"/"}>
+                    <Image
+                        src={githubIcon}
+                        alt="Github logo: ..."
+                        className={styles.githubImg}
+                        quality={100}
+                    />
+                </Link>
+            </div>
+
+            <div className={styles.text}>
+                <p>Table data is stored in local storage</p>
+                <p>Download your data to avoid data loss</p>
+            </div>
+
         </div>
     )
 }

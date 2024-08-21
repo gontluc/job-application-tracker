@@ -29,14 +29,41 @@ export const MAX_LENGTH_NOTES = 1300
 
 export const DEFAULT_DATA: ApplicationInterface[] = [
     {
-        id: "123",
+        id: "4b2e356f-1f47-4c2d-9b59-7305e7bff856",
         status: "waiting",
-        company: "Lorem ipsum dolor sit, amet consectetur adipisicing elit.",
-        location: "Earth - Universe",
-        email: "companyemailcompampanyemail@companyemailcompanyemail.com",
-        date: "2024-08-07T13:44:25.804Z",
-        website: "https://www.websitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsiteweewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsitewebsite.com",
-        notes: "-"
+        company: "Tech Innovators Inc.",
+        location: "San Francisco, CA",
+        email: "hr@techinnovators.com",
+        date: "2024-08-15T08:24:24.546Z",
+        website: "https://techinnovators.com/careers",
+        notes: "Follow up in two weeks.",
+    },
+    {
+        id: "c3f5901e-8e49-4bc2-91d3-7c328b1eb5de",
+        status: "progressing",
+        company: "Global FinTech",
+        location: "New York, NY",
+        email: "careers@globalfintech.com",
+        date: "2024-08-10T08:24:24.546Z",
+        notes: "Scheduled for a second interview.",
+    },
+    {
+        id: "f7d8e8b1-2c41-4baf-9351-445987b0df85",
+        status: "rejected",
+        company: "AI Solutions Ltd.",
+        location: "Austin, TX",
+        email: "jobs@aisolutions.com",
+        date: "2024-08-12T08:24:24.546Z",
+        website: "https://aisolutions.com/jobs",
+    },
+    {
+        id: "a6e8e1f7-bc1a-4d9a-a9e5-53b4c3c1f7f1",
+        status: "progressing",
+        company: "Innovative Tech Corp",
+        location: "Los Angeles, CA",
+        email: "apply@innoteccahcorp.com",
+        date: "2024-08-18T08:24:24.546Z",
+        website: "https://innotechcorp.com/careers",
     }
 ]
 
@@ -50,4 +77,4 @@ export const DEFAULT_SORTING: SortingType = "Latest"
 
 // NOTIFICATION DURATION IN MILISECONDS
 
-export const NOTIFICATION_DURATION = 3_000
+export const NOTIFICATION_DURATION = 5_000

@@ -1,8 +1,9 @@
 @import "/styles/globals/config";
 
 $tableGap: 10px;
-$rowPadding: 25px 40px;
-$rowGap: 40px;
+$rowBigPadding: 20px;
+$rowPadding: 0px 20px;
+$rowGap: 70px;
 
 @mixin clickableTitle {
     &:hover {
@@ -12,6 +13,18 @@ $rowGap: 40px;
     &:active {
         transform: scale(.9);
     }
+}
+
+@mixin row {
+    @include letterSpacing;
+    background-color: $white;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: $rowGap;
+    position: relative;
+    border-radius: 20px;
+    font-size: 15px;
 }
 
 .container {
@@ -45,83 +58,102 @@ $rowGap: 40px;
     margin-top: 2px;
 }
 
+.table {
+    width: 100%;
+    max-height: 90vh;
+    padding: 20px;
+    background-color: $grey;
+    border-radius: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .applicationsContainer {
+    @include scrollbar;
     width: 100%;
     display: flex;
     flex-direction: column;
-    height: 90vh;
     overflow: auto;
-    position: relative;
-    border-radius: 40px;
-    background-color: $grey;
     gap: $tableGap;
 }
 
 .titles {
-    padding: $rowPadding;
+    padding: calc($rowBigPadding / 2) $rowBigPadding;
     position: sticky;
     z-index: 20;
     top: 0;
     left: auto;
+    width: max-content;
     display: flex;
     align-items: center;
     gap: $rowGap;
     background-color: $grey;
 
-    div {
+    .title {
         @include avoidSelection;
+        @include letterSpacing;
         display: flex;
         align-items: center;
-        gap: 5px;
-        font-size: 18px;
+        gap: 4px;
+        font-size: 16px;
         font-weight: 600;
     }
 
+    .clickable {
+        @include clickableTitle;
+    }
+
     .arrowImg {
-        max-width: 18px;
+        max-width: 16px;
         height: auto;
     }
 }
 
 .status {
-    @include column(100px);
-    @include clickableTitle;
+    @include column(120px);
+    @include avoidSelection;
     overflow: visible;
 }
 
 .company {
-    @include column(200px);
-    @include clickableTitle;
+    @include column(170px);
 
 }
 
 .location {
-    @include column(200px);
-    @include clickableTitle;
+    @include column(150px);
 
 }
 
 .email {
-    @include column(200px);
-    @include clickableTitle;
+    @include column(170px);
 
 }
 
 .date {
-    @include column(200px);
-    @include clickableTitle;
+    @include column(120px);
 
 }
 
 .website {
-    @include column(200px);
+    @include column(170px);
 
 }
 
 .notes {
-    @include column(200px);
+    @include column(400px);
+    text-wrap: wrap;
+    padding: 20px 0px;
+}
 
-    width: auto;
+.copyEmails {
+    @include blueBtn;
+    width: fit-content;
+    text-wrap: nowrap;
+    font-size: 16px;
+    font-weight: 500;
+    align-self: center;
 }
 
 .subContainer {
@@ -129,62 +161,117 @@ $rowGap: 40px;
     display: flex;
     flex-direction: column;
     gap: $tableGap;
-}
-
-.copyEmails {
-    @include blueBtn;
-    position: sticky;
-    top: 0;
-    right: 5vw;
-    text-wrap: nowrap;
+    height: fit-content;
 }
 
 .row {
+    @include row;
+    min-height: 60px;
     padding: $rowPadding;
-    width: fit-content;
-    display: flex;
-    gap: $rowGap;
-    position: relative;
+    transition: background 1s ease;
+    
 
     &:hover {
-        background-color: rgb(222, 222, 243)
+        background-color: $hoverBlue;
     }
 }
 
+.editRow {
+    @include row;
+    width: max-content;
+    box-shadow: $boxShadow;
+    padding: 40px 20px;
+}
+
+.rowForm {
+    @include row;
+    gap: 40px;
+}
+
+.greyData {
+    color: #979797;
+    cursor: default;
+}
+
 .statusContainer {
+    @include flexCenter;
+    padding: .2em .6em;
+    gap: 3px;
+    width: fit-content;
     position: relative;
-    border: #ccc solid 1px;
+    border-radius: $defaultBorderRadius;
+    text-transform: capitalize;
+    font-size: 15px;
+    font-weight: 500;
+    color: $white;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.whiteArrowIcon {
+    max-width: 15px;
+    height: auto;
 }
 
 .selectStatus {
     position: absolute;
-    z-index: 10;
-    background-color: #ccc;
-    left: 0;
     top: 100%;
+    left: 0;
+    z-index: 10;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    width: 100%;
-    height: 100px
+    min-width: 100%;
+    gap: 6px;
+    padding: 6px;
+    background-color: $white;
+    border-radius: $defaultBorderRadius;
+    box-shadow: $boxShadow;
+    border: $darkGrey 1px solid;
 }
 
 .actionsContainer {
     position: sticky;
-    background-color: #ccc;
-    right: 10vw;
+    right: 5vw;
     top: 0;
     z-index: 10;
     display: flex;
-    gap: 10px;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background-color: $white;
+    border-radius: $defaultBorderRadius;
+    box-shadow: $boxShadow;
+    border: $darkGrey 1px solid;
 }
 
 .btn {
     @include blueBtn;
+    color: $black;
+    background-color: transparent;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+
+    &:hover {
+        background-color: $darkGrey;
+    }
+}
+
+.editDeleteIcon {
+    max-width: 20px;
+    height: auto;
 }
 
 .btnRed {
     @include blueBtn;
+    background-color: $red;
+
+    &:hover {
+        background-color: lighten($color: $red, $amount: 10%);
+    }
 }
 
 .btnBlue {
@@ -193,4 +280,15 @@ $rowGap: 40px;
 
 .btnGreen {
     @include blueBtn;
+    background-color: $green;
+
+    &:hover {
+        background-color: lighten($color: $green, $amount: 10%);
+    }
+}
+
+:export {
+    blue: $blue;
+    green: $green;
+    red: $red;
 }

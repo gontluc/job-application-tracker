@@ -1,5 +1,77 @@
 @import "/styles/globals/config";
 
 .container {
+    @include sectionMargin;
+    @include avoidSelection;
+    display: grid;
+    grid-template-columns: repeat(3, 276px);
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 220px;
+    padding-bottom: 80px;
+}
+
+.lucas {
+    @include letterSpacing;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-weight: 500;
+}
+
+.lucasImg {
+    max-width: 30px;
+    height: auto;
+}
+
+.github {
+    @include flexCenter;
+}
+
+.githubImg {
+    max-width: 30px;
+    height: auto;
+}
+
+.text {
+    @include letterSpacing;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+@media (max-width: 1100px) {
+    .container {
+        grid-template-columns: repeat(3, 1fr);
+        padding-top: 120px;
+        padding-bottom: 60px;
+    }
+
+    .lucas {
+        font-size: 13px;
+    }
+
+    .lucasImg {
+        max-width: 23px;
+    }
     
+    .githubImg {
+        max-width: 23px;
+    }
+
+    .text {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 800px) {
+    .container {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 40px;
+        padding-top: 100px;
+        padding-bottom: 60px;
+    }
 }

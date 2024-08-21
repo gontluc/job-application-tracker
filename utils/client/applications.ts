@@ -23,8 +23,8 @@ import { EditApplicationData } from "@/classes/action"
 function checkHoneypot(honeypot: string): void {
 
     if (honeypot) {
-        console.log('Not human activity detected')
-        throw new Error("Not human activity detected")
+        console.log('Non-human activity detected')
+        throw new Error("Non-human activity detected")
     }
 }
 

@@ -29,10 +29,10 @@ export default function DownloadBtn() {
         // Return if no data
         if (applications.length === 0) { 
             pushNotification(notificationsContext, {
-                text: "No data to download, please add an application",
+                text: "No data to download. Please add an application",
                 color: "red"
             })
-            console.log("No data to download, please add an application")
+            console.log("No data to download. Please add an application")
             return 
         }
 

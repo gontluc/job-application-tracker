@@ -9,6 +9,9 @@ import { ApplicationsContext } from "@/providers/applications/applications"
 // React.js
 import { useState, useEffect, useContext } from "react"
 
+// Utils
+import { getBgColor } from "@/utils/client/styles"
+
 // Style
 import styles from "./Header.module.scss"
 
@@ -90,23 +93,10 @@ function Stat({ text, number, percentage }: {
     percentage: string
 }) {
 
-    function getBgColor(status: ApplicationStatus) {
-        switch (status) {
-            case "waiting":
-                return styles.blue
-            case "rejected":
-                return styles.red
-            case "progressing":
-                return styles.green
-            default:
-                // Unreach
-        }
-    }
-
     return (
         <div className={styles.stat}>
 
-            <div className={styles.pill} style={{ backgroundColor: getBgColor(text) }}></div>
+            <div className={styles.pill} style={{ backgroundColor: getBgColor(styles, text) }}></div>
             
             <div className={styles.number}>{number}</div>
 

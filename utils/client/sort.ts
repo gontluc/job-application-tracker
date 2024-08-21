@@ -25,8 +25,8 @@ function textSorting<P extends TextSortingPropertyType>(
 
     return (a: ApplicationInterface, b: ApplicationInterface) => {
 
-        const propertyA = a[property]
-        const propertyB = b[property]
+        const propertyA = (a[property] as string).toLowerCase()
+        const propertyB = (b[property] as string).toLowerCase()
 
         if (propertyA < propertyB) return order === "A-Z" ? -1 : 1
         if (propertyA > propertyB) return order === "A-Z" ? 1 : -1

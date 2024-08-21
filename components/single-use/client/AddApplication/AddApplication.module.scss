@@ -3,7 +3,7 @@
 .container {
     width: 100%;
     padding: 0px 30px;
-    padding-top: calc(10px + $scrollbarHeight);
+    padding-top: calc(10px + $scrollbarSize);
     padding-bottom: 10px;
     background-color: $grey;
     border-radius: 1000px;
@@ -16,7 +16,7 @@
 }
 
 .inputs {
-    @include scroolbar;
+    @include scrollbar;
     display: flex;
     gap: 15px;
     padding: 10px 0px;

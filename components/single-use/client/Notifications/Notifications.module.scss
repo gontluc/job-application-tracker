@@ -3,31 +3,36 @@
 .container {
     position: fixed;
     z-index: 30;
-    top: 10px;
-    left: 0;
-    right: 0;
+    bottom: 20px;
+    right: 5vw;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     gap: 20px;
     align-items: center;
     justify-content: center;
 
-    transition: all ease-in-out .7s;
+    transition: all ease-in-out 1s;
 }
 
 .subContainer {
-    @include padding;
+    @include letterSpacing;
+    padding: .4em 1.5em;
+    color: $white;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: $defaultBorderRadius;
+    box-shadow: $boxShadow;
 
     /* Animation initial state */
     opacity: 0;
-    transform: translateY(-1000px);
+    transform: translateY(100vw);
 
     animation: pop-notification forwards ease-in-out;
 }
 
 @keyframes pop-notification {
     from {
-        transform: translateY(-1000px);
+        transform: translateY(100vw);
         opacity: 0;
     }
 
@@ -42,8 +47,14 @@
     }
 
     to {
-        transform: translateY(-1000px);
+        transform: translateY(100vw);
         opacity: 0;
+    }
+}
+
+@media (max-width: 1000px) {
+    .subContainer {
+        font-size: 12px;
     }
 }
 

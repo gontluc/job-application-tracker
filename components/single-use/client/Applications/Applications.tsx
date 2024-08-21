@@ -4,6 +4,7 @@
 import { editApplication, deleteApplication } from "@/utils/client/applications"
 import pushNotification from "@/utils/client/notifications"
 import { sortingFunctions } from "@/utils/client/sort"
+import { getBgColor } from "@/utils/client/styles"
 import {
     DEFAULT_SORTING,
     MAX_LENGTH_NOTES,
@@ -39,7 +40,10 @@ import {
 import { Action, EditApplicationData } from "@/classes/action"
 
 // Assets
+import whiteArrowIcon from "@/public/icons/whiteArrow.png"
+import deleteIcon from "@/public/icons/delete.png"
 import arrowIcon from "@/public/icons/arrow.png"
+import editIcon from "@/public/icons/edit.png"
 
 // Style
 import styles from "./Applications.module.scss"
@@ -59,80 +63,82 @@ export default function Applications() {
 
             <OrderBy sorting={sorting} />
 
-            <div className={styles.applicationsContainer}>
+            <div className={styles.table}>
 
-                <div className={styles.titles}>
-                    <Title
-                        name={"Status"}
-                        style={styles.status}
-                        sorting={sorting}
-                        setSorting={setSorting}
-                        titleSortings={[
-                            "Status"
-                        ]}
-                    />
-                    <Title
-                        name={"Company"}
-                        style={styles.company}
-                        sorting={sorting}
-                        setSorting={setSorting}
-                        titleSortings={[
-                            "Company: A-Z",
-                            "Company: Z-A"
-                        ]}
-                    />
-                    <Title
-                        name={"Location"}
-                        style={styles.location}
-                        sorting={sorting}
-                        setSorting={setSorting}
-                        titleSortings={[
-                            "Location: A-Z",
-                            "Location: Z-A"
-                        ]}
-                    />
-                    <Title
-                        name={"Email"}
-                        style={styles.email}
-                        sorting={sorting}
-                        setSorting={setSorting}
-                        titleSortings={[
-                            "Email: A-Z",
-                            "Email: Z-A"
-                        ]}
-                    />
-                    <Title
-                        name={"Date"}
-                        style={styles.date}
-                        sorting={sorting}
-                        setSorting={setSorting}
-                        titleSortings={[
-                            "Oldest",
-                            "Latest"
-                        ]}
-                    />
+                <div className={styles.applicationsContainer}>
 
-                    <div className={styles.website}>Website</div>
-                    <div className={styles.notes}>Notes</div>
+                    <div className={styles.titles}>
+                        <Title
+                            name={"Status"}
+                            style={`${styles.status} ${styles.clickable}`}
+                            sorting={sorting}
+                            setSorting={setSorting}
+                            titleSortings={[
+                                "Status"
+                            ]}
+                        />
+                        <Title
+                            name={"Company"}
+                            style={`${styles.company} ${styles.clickable}`}
+                            sorting={sorting}
+                            setSorting={setSorting}
+                            titleSortings={[
+                                "Company: A-Z",
+                                "Company: Z-A"
+                            ]}
+                        />
+                        <Title
+                            name={"Location"}
+                            style={`${styles.location} ${styles.clickable}`}
+                            sorting={sorting}
+                            setSorting={setSorting}
+                            titleSortings={[
+                                "Location: A-Z",
+                                "Location: Z-A"
+                            ]}
+                        />
+                        <Title
+                            name={"Email"}
+                            style={`${styles.email} ${styles.clickable}`}
+                            sorting={sorting}
+                            setSorting={setSorting}
+                            titleSortings={[
+                                "Email: A-Z",
+                                "Email: Z-A"
+                            ]}
+                        />
+                        <Title
+                            name={"Date"}
+                            style={`${styles.date} ${styles.clickable}`}
+                            sorting={sorting}
+                            setSorting={setSorting}
+                            titleSortings={[
+                                "Oldest",
+                                "Latest"
+                            ]}
+                        />
 
-                    <ClipboardEmails />
+                        <div className={`${styles.website} ${styles.title}`}>Website</div>
+                        <div className={`${styles.notes} ${styles.title}`}>Notes</div>
+                    </div>
+
+                    <div className={styles.subContainer}>
+
+                        {applications?.sort(sortingFunctions[sorting]).map((application) => {
+                            return (
+                                <Row
+                                    key={application.id}
+                                    application={application}
+                                    applicationsContext={{ applications, setApplications }}
+                                    notificationsContext={notificationsContext}
+                                />
+                            )
+                        })}
+
+                    </div>
                 </div>
 
-                <div className={styles.subContainer}>
-
-                    {applications?.sort(sortingFunctions[sorting]).map((application) => {
-                        return (
-                            <Row
-                                key={application.id}
-                                application={application}
-                                applicationsContext={{ applications, setApplications }}
-                                notificationsContext={notificationsContext}
-                            />
-                        )
-                    })}
-
-                </div>
-
+                <ClipboardEmails />
             </div>
         </div>
     )
@@ -179,7 +185,7 @@ function Title({ name, style, sorting, setSorting, titleSortings }: {
 
     return (
         <div
-            className={style}
+            className={`${style} ${styles.title}`}
             onClick={handleClick}
         >
             {name}
@@ -210,10 +216,10 @@ function ClipboardEmails() {
         navigator.clipboard.writeText(emailString)
             .then(() => {
                 pushNotification(notificationsContext, {
-                    text: "Emails copied to clipboard",
+                    text: "Emails copied to the clipboard",
                     color: "blue"
                 })
-                console.log("Emails copied to clipboard")
+                console.log("Emails copied to the clipboard")
             })
             .catch(() => {
                 pushNotification(notificationsContext, {
@@ -279,18 +285,53 @@ function Row({ application, applicationsContext, notificationsContext }: {
         }
     }
 
-    function displayData(data: string | undefined) {
+    function displayData(data: string | undefined, freeLength?: true) {
         if (!data) {
             return "-"
+        }
+
+        if (!freeLength && data.length > 20) {
+            return data.slice(0, 20) + "..."
         }
 
         return data
     }
 
+    function displayDateTime(data: string) {
+
+        const miliseconds = new Date().getTime() - new Date(data).getTime()
+
+        const days = (miliseconds / (1000 * 60 * 60 * 24)).toFixed()
+
+        return `${days} day${days !== "1" ? "s" : ""} ago`
+    }
+
+    function displayWebsite(data: string | undefined) {
+        if (!data) {
+            return "-"
+        }
+
+        let newString = data
+
+        const replaceStrings = [
+            "https://", "http://", "www."
+        ]
+
+        replaceStrings.forEach((str) => {
+            newString = newString.replace(str, "")
+        })
+
+        if (newString.length >= 20) {
+            return newString.slice(0, 20) + "..."
+        }
+
+        return newString
+    }
+
     return (
         <div
             ref={containerRef}
-            className={styles.row}
+            className={editting ? styles.editRow : styles.row}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
         >
@@ -318,15 +359,15 @@ function Row({ application, applicationsContext, notificationsContext }: {
                     </div>
 
                     <div className={styles.date}>
-                        {displayData(application.date)}
+                        {displayDateTime(application.date)}
                     </div>
 
                     <div className={styles.website}>
-                        {displayData(application.website)}
+                        {displayWebsite(application.website)}
                     </div>
 
                     <div className={styles.notes}>
-                        {displayData(application.notes)}
+                        {displayData(application.notes, true)}
                     </div>
                 </>
                 :
@@ -336,6 +377,7 @@ function Row({ application, applicationsContext, notificationsContext }: {
                     application={application}
                     applicationsContext={applicationsContext}
                     notificationsContext={notificationsContext}
+                    displayDateTime={displayDateTime}
                     setApplicationStatus={setApplicationStatus}
                 />
             }
@@ -391,7 +433,12 @@ function AppStatus({ application, applicationsContext, notificationsContext, set
     // Listen for clicks outside of container to disable states
     useListenClickOutside(activeDropdown, Status.cancel, containerRef)
 
-    function handleStatusClick(status: ApplicationStatus) {
+    function handleStatusClick(
+        e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+        status: ApplicationStatus
+    ) {
+
+        e.stopPropagation()
 
         // Save directly or change state and wait for form submission
         if (setApplicationStatus) {
@@ -412,11 +459,23 @@ function AppStatus({ application, applicationsContext, notificationsContext, set
     return (
         <div ref={containerRef} className={styles.status}>
 
-            <div className={styles.statusContainer}>
+            <div
+                className={styles.statusContainer}
+                style={{ backgroundColor: getBgColor(styles, currentStatus) }}
+                onClick={() => {
+                    Status.toggle()
+                }}
+            >
+                <div>{currentStatus}</div>
 
-                <div onClick={() => Status.toggle()}>
-                    {currentStatus}
-                </div>
+                <Image
+                    src={whiteArrowIcon}
+                    alt="Arrow Icon: Click to toggle dropdown application status menu"
+                    quality={100}
+                    priority
+                    className={styles.whiteArrowIcon}
+                    style={{ transform: activeDropdown ? "rotate(180deg)" : "rotate(0deg)" }}
+                />
 
 
                 <div
@@ -425,7 +484,12 @@ function AppStatus({ application, applicationsContext, notificationsContext, set
                 >
                     {otherStatus.map((status) => {
                         return (
-                            <div key={status} onClick={() => handleStatusClick(status)}>
+                            <div
+                                key={status}
+                                className={styles.statusContainer}
+                                style={{ backgroundColor: getBgColor(styles, status) }}
+                                onClick={(e) => handleStatusClick(e, status)}
+                            >
                                 {status}
                             </div>
                         )
@@ -439,17 +503,18 @@ function AppStatus({ application, applicationsContext, notificationsContext, set
 }
 
 function EditRowForm({
-    formId, formRef, application, applicationsContext, notificationsContext, setApplicationStatus
+    formId, formRef, application, applicationsContext, notificationsContext, displayDateTime, setApplicationStatus
 }: {
     formId: string,
     formRef: React.MutableRefObject<HTMLFormElement | null>,
     application: ApplicationInterface,
     applicationsContext: ApplicationsContextInterface,
     notificationsContext: NotificationsContextInterface,
-    setApplicationStatus?: React.Dispatch<React.SetStateAction<ApplicationStatus>>
+    displayDateTime: (data: string) => string,
+    setApplicationStatus?: React.Dispatch<React.SetStateAction<ApplicationStatus>>,
 }) {
     return (
-        <form id={formId} ref={formRef} autoComplete="off" className={styles.row}>
+        <form id={formId} ref={formRef} autoComplete="off" className={styles.rowForm}>
 
             <AppStatus
                 application={application}
@@ -485,7 +550,9 @@ function EditRowForm({
                 value={application.email}
             />
 
-            <div className={styles.date}>{application.date}</div>
+            <div className={`${styles.date} ${styles.greyData}`}>
+                {displayDateTime(application.date)}
+            </div>
 
             <Input
                 style="default"
@@ -527,14 +594,24 @@ function EditDelete({
     return (
         <div
             className={styles.actionsContainer}
-            style={{ zIndex: condition ? 10 : -1 }}
+            style={{
+                zIndex: condition ? 10 : -1,
+                position: condition ? "sticky" : "absolute"
+            }}
         >
             <button
                 className={styles.btn}
                 aria-label="Click to edit application"
                 onClick={() => Edit.enable()}
             >
-                Edit
+                <Image
+                    src={editIcon}
+                    alt="Edit icon"
+                    className={styles.editDeleteIcon}
+                    quality={100}
+                    priority
+                />
+                <p>Edit</p>
             </button>
 
             <button
@@ -542,7 +619,14 @@ function EditDelete({
                 aria-label="Click to delete application"
                 onClick={() => Delete.enable()}
             >
-                Delete
+                <Image
+                    src={deleteIcon}
+                    alt="Delete icon"
+                    className={styles.editDeleteIcon}
+                    quality={100}
+                    priority
+                />
+                <p>Delete</p>
             </button>
         </div>
     )
@@ -557,7 +641,10 @@ function SaveCancel({ formId, handleFormAction, condition, Edit }: {
     return (
         <div
             className={styles.actionsContainer}
-            style={{ zIndex: condition ? 10 : -1 }}
+            style={{
+                zIndex: condition ? 10 : -1,
+                position: condition ? "sticky" : "absolute"
+            }}
         >
 
             <button
@@ -589,7 +676,10 @@ function DeleteCancel({ condition, Delete }: {
     return (
         <div
             className={styles.actionsContainer}
-            style={{ zIndex: condition ? 10 : -1 }}
+            style={{
+                zIndex: condition ? 10 : -1,
+                position: condition ? "sticky" : "absolute"
+            }}
         >
 
             <button

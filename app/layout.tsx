@@ -2,14 +2,15 @@
 import NotificationsProvider from "@/providers/notifications/notifications"
 import ApplicationsProvider from "@/providers/applications/applications"
 
+// Next.js
+import { Analytics } from "@vercel/analytics/react"
+import type { Metadata } from "next"
+
 // Font
 import { Inter } from "next/font/google"
 
 // Style
 import "@/styles/globals/globals.scss"
-
-// Next.js
-import type { Metadata } from "next"
 
 // Inter font
 const inter = Inter({
@@ -37,6 +38,8 @@ export default function RootLayout({ children }: Readonly<{
                     </NotificationsProvider>
                 </ApplicationsProvider>
 
+                <Analytics />
+                
             </body>
         </html>
     )

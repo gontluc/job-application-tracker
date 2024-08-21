@@ -15,18 +15,19 @@ $black: #333;
 
 $blue: #3F6EE3;
 $lightBlue: rgb(82, 129, 247);
+$hoverBlue: #EBEEF5;
 $red: #EF2B2B;
 $green: #3AD65C;
 
 /* Shadows */
 
-$boxShadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+$boxShadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
 
 /* Border radius */
 
 $defaultBorderRadius: .3em;
 $roundBorderRadius: 10rem;
 
-/* Scrollbar width */
+/* Scrollbar size */
 
-$scrollbarHeight: 6px;
+$scrollbarSize: 8px;
