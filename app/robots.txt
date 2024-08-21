@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: http://www.yourwebsite.com/sitemap.xml
+Sitemap: https://job-application-tracker-five.vercel.app/sitemap.xml
