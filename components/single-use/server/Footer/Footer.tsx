@@ -14,7 +14,7 @@ export default function Footer() {
         <div className={styles.container}>
 
 
-            <Link href={"https://lucas-gontijo.vercel.app/"} className={styles.lucas}>
+            <Link href={"https://lucas-gontijo.vercel.app/"} target="_blank" className={styles.lucas}>
                 <Image
                     src={lucasIcon}
                     alt="Lucas Gontijo logo"
@@ -25,7 +25,7 @@ export default function Footer() {
             </Link>
 
             <div className={styles.github}>
-                <Link href={"https://github.com/gontluc"}>
+                <Link href={"https://github.com/gontluc"} target="_blank">
                     <Image
                         src={githubIcon}
                         alt="Github logo"
