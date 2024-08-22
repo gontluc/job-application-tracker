@@ -2,11 +2,15 @@
 
 https://job-application-tracker-five.vercel.app/
 
-### Technologies
+<br>
+
+## Technologies
 
 Next.js, TypeScript, SASS.
 
-### Dependencies
+<br>
+
+## Dependencies
 
 - **react-dropzone:** Simple React hook to create a HTML5-compliant drag'n'drop zone for files.
 
@@ -24,6 +28,6 @@ https://github.com/cure53/DOMPurify
 
 <br>
 
-# Observations
+## Observations
 
 - **Maximum Size for Local Storage:** The maximum size across the most popular browsers is 5-10 MB. The maximum JSON file size for this application is set to 3MB, this avoids reaching the limit.
